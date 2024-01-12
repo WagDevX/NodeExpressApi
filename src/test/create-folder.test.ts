@@ -1,5 +1,5 @@
-import { Folder } from "../../entities/folder";
-import { FolderRepository } from "../../repos/folder-repository";
+import { Folder } from "../folder/domain/entities/folder";
+import { FolderRepository } from "../folder/domain/repos/folder-repository";
 
 export class MockFolderRepository implements FolderRepository {
   findFolderById(id: number): Promise<Folder> {

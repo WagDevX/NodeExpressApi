@@ -2,12 +2,10 @@ import { Folder } from "../../../domain/entities/folder";
 
 export interface FolderDataSource {
   getFolders(): Promise<Folder[]>;
-  createFolder(
-    name: string,
-    owner: number,
-    parentFolder?: number
-  ): Promise<boolean>;
-  renameFolder(id: number, name: string): Promise<boolean>;
-  moveFolder(id: number, parentFolder: number): Promise<boolean>;
-  deleteFolder(id: number): Promise<boolean>;
+  findFolderById(id: number): Promise<Folder>;
+  findFoldersByOwner(owner: number): Promise<Folder[]>;
+  createFolder(folder: Folder): Promise<void>;
+  renameFolder(id: number, name: string): Promise<void>;
+  moveFolder(id: number, parentFolder: number): Promise<void>;
+  deleteFolder(id: number): Promise<void>;
 }

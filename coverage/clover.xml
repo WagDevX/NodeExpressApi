@@ -1,28 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1705027539548" clover="3.2.0">
-  <project timestamp="1705027539548" name="All files">
-    <metrics statements="47" coveredstatements="47" conditionals="0" coveredconditionals="0" methods="15" coveredmethods="15" elements="62" coveredelements="62" complexity="0" loc="47" ncloc="47" packages="2" files="2" classes="2"/>
+<coverage generated="1705064890904" clover="3.2.0">
+  <project timestamp="1705064890904" name="All files">
+    <metrics statements="82" coveredstatements="82" conditionals="8" coveredconditionals="4" methods="34" coveredmethods="34" elements="124" coveredelements="120" complexity="0" loc="82" ncloc="82" packages="4" files="4" classes="4"/>
     <package name="src">
       <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
       <file name="server.ts" path="C:\Users\waggt\Desktop\DesafioPrinter\NodeExpressApi\src\server.ts">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="3" count="2" type="stmt"/>
-        <line num="4" count="2" type="stmt"/>
-        <line num="5" count="2" type="stmt"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="3" count="1" type="stmt"/>
+        <line num="4" count="1" type="stmt"/>
+        <line num="5" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.folder.data.datasources.impl">
+      <metrics statements="19" coveredstatements="19" conditionals="8" coveredconditionals="4" methods="11" coveredmethods="11"/>
+      <file name="pg-folder-data-source.ts" path="C:\Users\waggt\Desktop\DesafioPrinter\NodeExpressApi\src\folder\data\datasources\impl\pg-folder-data-source.ts">
+        <metrics statements="19" coveredstatements="19" conditionals="8" coveredconditionals="4" methods="11" coveredmethods="11"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="6" count="1" type="stmt"/>
+        <line num="9" count="7" type="stmt"/>
+        <line num="13" count="1" type="stmt"/>
+        <line num="14" count="1" type="stmt"/>
+        <line num="15" count="1" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="25" count="1" type="stmt"/>
+        <line num="28" count="1" type="stmt"/>
+        <line num="29" count="1" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="40" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="44" count="1" type="stmt"/>
+        <line num="51" count="1" type="stmt"/>
+        <line num="54" count="1" type="stmt"/>
+        <line num="61" count="1" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="71" count="1" type="stmt"/>
+      </file>
+    </package>
+    <package name="src.folder.data.repos">
+      <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
+      <file name="folder-repository-impl.ts" path="C:\Users\waggt\Desktop\DesafioPrinter\NodeExpressApi\src\folder\data\repos\folder-repository-impl.ts">
+        <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
+        <line num="5" count="1" type="stmt"/>
+        <line num="8" count="7" type="stmt"/>
+        <line num="11" count="1" type="stmt"/>
+        <line num="12" count="1" type="stmt"/>
+        <line num="16" count="1" type="stmt"/>
+        <line num="17" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="22" count="1" type="stmt"/>
+        <line num="26" count="1" type="stmt"/>
+        <line num="27" count="1" type="stmt"/>
+        <line num="31" count="1" type="stmt"/>
+        <line num="32" count="1" type="stmt"/>
+        <line num="36" count="1" type="stmt"/>
+        <line num="37" count="1" type="stmt"/>
+        <line num="41" count="1" type="stmt"/>
+        <line num="42" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.folder.presentation.routers">
       <metrics statements="43" coveredstatements="43" conditionals="0" coveredconditionals="0" methods="15" coveredmethods="15"/>
       <file name="folder-router.ts" path="C:\Users\waggt\Desktop\DesafioPrinter\NodeExpressApi\src\folder\presentation\routers\folder-router.ts">
         <metrics statements="43" coveredstatements="43" conditionals="0" coveredconditionals="0" methods="15" coveredmethods="15"/>
-        <line num="1" count="2" type="stmt"/>
-        <line num="10" count="2" type="stmt"/>
-        <line num="19" count="2" type="stmt"/>
-        <line num="21" count="3" type="stmt"/>
-        <line num="22" count="3" type="stmt"/>
-        <line num="23" count="3" type="stmt"/>
-        <line num="24" count="2" type="stmt"/>
+        <line num="1" count="1" type="stmt"/>
+        <line num="10" count="1" type="stmt"/>
+        <line num="19" count="1" type="stmt"/>
+        <line num="21" count="2" type="stmt"/>
+        <line num="22" count="2" type="stmt"/>
+        <line num="23" count="2" type="stmt"/>
+        <line num="24" count="1" type="stmt"/>
         <line num="26" count="1" type="stmt"/>
         <line num="30" count="2" type="stmt"/>
         <line num="31" count="2" type="stmt"/>
@@ -58,7 +105,7 @@
         <line num="88" count="1" type="stmt"/>
         <line num="89" count="1" type="stmt"/>
         <line num="91" count="1" type="stmt"/>
-        <line num="95" count="2" type="stmt"/>
+        <line num="95" count="1" type="stmt"/>
       </file>
     </package>
   </project>

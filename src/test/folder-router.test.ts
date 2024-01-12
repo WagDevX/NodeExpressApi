@@ -1,14 +1,14 @@
 import request from "supertest";
-import { Folder } from "../../../../src/folder/domain/entities/folder";
-import { CreateFolderUseCase } from "../../domain/usecases/interfaces/create-folder";
-import { DeleteFolderUseCase } from "../../domain/usecases/interfaces/delete-folder";
-import { GetFoldersUseCase } from "../../domain/usecases/interfaces/get-folders";
-import { MoveFolderUseCase } from "../../domain/usecases/interfaces/move-folder";
-import { RenameFolderUseCase } from "../../domain/usecases/interfaces/rename-folder";
-import FoldersRouter from "../../../../src/folder/presentation/routers/folder-router";
-import server from "../../../../src/server";
-import { FindFolderByIdUseCase } from "../../domain/usecases/interfaces/find-folder-by-id";
-import { FindFolderByOwnerUseCase } from "../../domain/usecases/interfaces/find-folder-by-owner";
+import { Folder } from "../folder/domain/entities/folder";
+import { CreateFolderUseCase } from "../folder/domain/usecases/interfaces/create-folder";
+import { DeleteFolderUseCase } from "../folder/domain/usecases/interfaces/delete-folder";
+import { FindFolderByIdUseCase } from "../folder/domain/usecases/interfaces/find-folder-by-id";
+import { FindFolderByOwnerUseCase } from "../folder/domain/usecases/interfaces/find-folder-by-owner";
+import { GetFoldersUseCase } from "../folder/domain/usecases/interfaces/get-folders";
+import { MoveFolderUseCase } from "../folder/domain/usecases/interfaces/move-folder";
+import { RenameFolderUseCase } from "../folder/domain/usecases/interfaces/rename-folder";
+import FoldersRouter from "../folder/presentation/routers/folder-router";
+import server from "../server";
 
 class MockGetFoldersUseCase implements GetFoldersUseCase {
   execute(): Promise<Folder[]> {
@@ -40,13 +40,13 @@ class MockMoveFolderUseCase implements MoveFolderUseCase {
   }
 }
 
-class MockFindFolderByIdUseCase {
+class MockFindFolderByIdUseCase implements FindFolderByIdUseCase {
   execute(id: number): Promise<Folder> {
     throw new Error("Method not implemented.");
   }
 }
 
-class MockFindFolderByOwnerUseCase {
+class MockFindFolderByOwnerUseCase implements FindFolderByOwnerUseCase {
   execute(owner: number): Promise<Folder[]> {
     throw new Error("Method not implemented.");
   }

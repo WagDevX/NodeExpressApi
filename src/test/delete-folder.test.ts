@@ -1,7 +1,7 @@
-import { FolderRepository } from "../../repos/folder-repository";
+import { FolderRepository } from "../folder/domain/repos/folder-repository";
 import { MockFolderRepository } from "./create-folder.test";
 
-describe("MoveFolderUseCase", () => {
+describe("DeleteFolderUseCase", () => {
   let mockFolderRepository: FolderRepository;
 
   beforeEach(() => {
@@ -9,15 +9,14 @@ describe("MoveFolderUseCase", () => {
     mockFolderRepository = new MockFolderRepository();
   });
 
-  test("should return true if folder is moved", async () => {
+  test("should return true if folder is deleted", async () => {
     const id = 1;
-    const parentFolder = 1;
 
     jest
-      .spyOn(mockFolderRepository, "moveFolder")
+      .spyOn(mockFolderRepository, "deleteFolder")
       .mockImplementation(async () => true);
 
-    const result = await mockFolderRepository.moveFolder(id, parentFolder);
+    const result = await mockFolderRepository.deleteFolder(id);
 
     expect(result).toBeTruthy();
   });
