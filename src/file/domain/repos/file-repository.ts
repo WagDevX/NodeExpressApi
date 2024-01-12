@@ -8,4 +8,6 @@ export interface FileRepository {
     renameFile(id: number, name: string) : Promise<boolean>;
 
     findFileByFolder(id: number) : Promise<boolean>;
+
+    deleteFile(id: number) : Promise<boolean>;
 }
