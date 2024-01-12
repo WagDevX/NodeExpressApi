@@ -17,29 +17,28 @@ export class PGFolderDataSource implements FolderDataSource {
         id: item.id,
         name: item.name,
         owner: item.owner,
-        parentFolder: item.parentFolder ? item.parentFolder : undefined,
+        parentFolder: item.parentFolder,
       };
     });
     return result;
   }
   async findFolderById(id: number): Promise<Folder> {
     const dbResponse = await this.db.query(
-      `SELECT * FROM ${DB_TABLE} WHERE id = ${id} limit 1`
+      `SELECT * FROM ${DB_TABLE} WHERE id = ${id}`
     );
     const result = dbResponse.rows.map((item) => {
       return {
         id: item.id,
         name: item.name,
         owner: item.owner,
-        parentFolder: item.parentFolder ? item.parentFolder : undefined,
+        parentFolder: item.parentFolder,
       };
     });
-
     return result[0];
   }
   async findFoldersByOwner(owner: number): Promise<Folder[]> {
     const dbResponse = await this.db.query(
-      `SELECT * FROM ${DB_TABLE} WHERE owner = ${owner}`
+      `SELECT * FROM ${DB_TABLE} WHERE owner = ${owner} limit 1`
     );
     const result = dbResponse.rows.map((item) => {
       return {
@@ -62,7 +61,7 @@ export class PGFolderDataSource implements FolderDataSource {
       `INSERT INTO ${DB_TABLE} (name, owner, parentFolder) VALUES ('${
         folder.name
       }', ${folder.owner}, ${
-        folder.parentFolder ? folder.parentFolder : undefined
+        folder.parentFolder
       })`
     );
   }

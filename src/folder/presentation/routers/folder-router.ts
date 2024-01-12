@@ -31,10 +31,11 @@ export default function FoldersRouter(
   router.get("/:id", async (req: Request, res: Response) => {
     try {
       const folders = await findFolderByIdUseCase.execute(
-        Number(req.params.id)
+        Number(req.query.id)
       );
       res.send(folders);
     } catch (err) {
+      console.log(err)
       res.status(500).send({ message: "Error fetching folder" });
     }
   });
@@ -42,7 +43,7 @@ export default function FoldersRouter(
   router.get("/:id/owner", async (req: Request, res: Response) => {
     try {
       const folders = await FindFolderByOwnerUseCase.execute(
-        Number(req.params.id)
+        Number(req.query.id)
       );
       res.send(folders);
     } catch (err) {
