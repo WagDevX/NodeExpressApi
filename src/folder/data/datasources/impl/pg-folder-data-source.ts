@@ -2,7 +2,8 @@ import { Folder } from "../../../domain/entities/folder";
 import { FolderDataSource } from "../interfaces/folder-data-source";
 import { SQLDatabaseWrapper } from "../wrapper/sql-database-wrapper";
 
-const DB_TABLE = "folders";
+const DB_TABLE = "folder";
+const DB_TABLE_USER = "user";
 export class PGFolderDataSource implements FolderDataSource {
   private db: SQLDatabaseWrapper;
   constructor(db: SQLDatabaseWrapper) {
@@ -51,10 +52,18 @@ export class PGFolderDataSource implements FolderDataSource {
     return result;
   }
   async createFolder(folder: Folder): Promise<void> {
+    await this.db.query(`CREATE TABLE IF NOT EXISTS ${DB_TABLE} (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(255) NOT NULL,
+      parentFolder INTEGER REFERENCES Folder(id),
+      owner INTEGER
+      )`);
     await this.db.query(
       `INSERT INTO ${DB_TABLE} (name, owner, parentFolder) VALUES ('${
         folder.name
-      }', ${folder.owner}, ${folder.parentFolder ? folder.parentFolder : null})`
+      }', ${folder.owner}, ${
+        folder.parentFolder ? folder.parentFolder : undefined
+      })`
     );
   }
   async renameFolder(id: number, name: string): Promise<void> {

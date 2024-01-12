@@ -23,6 +23,7 @@ export default function FoldersRouter(
       const folders = await getFoldersUseCase.execute();
       res.send(folders);
     } catch (err) {
+      console.log(err);
       res.status(500).send({ message: "Error fetching folders" });
     }
   });
@@ -55,6 +56,7 @@ export default function FoldersRouter(
       res.statusCode = 201;
       res.json({ message: "Created" });
     } catch (err) {
+      console.log(err);
       res.status(500).send({ message: "Error creating folder" });
     }
   });
