@@ -4,13 +4,17 @@ import { DeleteFolderUseCase } from "../../domain/usecases/interfaces/delete-fol
 import { GetFoldersUseCase } from "../../domain/usecases/interfaces/get-folders";
 import { MoveFolderUseCase } from "../../domain/usecases/interfaces/move-folder";
 import { RenameFolderUseCase } from "../../domain/usecases/interfaces/rename-folder";
+import { FindFolderByIdUseCase } from "../../domain/usecases/interfaces/find-folder-by-id";
+import { FindFolderByOwnerUseCase } from "../../domain/usecases/interfaces/find-folder-by-owner";
 
 export default function FoldersRouter(
   getFoldersUseCase: GetFoldersUseCase,
   createFolderUseCase: CreateFolderUseCase,
   moveFolderUseCase: MoveFolderUseCase,
   renameFolderUseCase: RenameFolderUseCase,
-  deleteFolderUseCase: DeleteFolderUseCase
+  deleteFolderUseCase: DeleteFolderUseCase,
+  findFolderByIdUseCase: FindFolderByIdUseCase,
+  FindFolderByOwnerUseCase: FindFolderByOwnerUseCase
 ) {
   const router = express.Router();
 
@@ -20,6 +24,28 @@ export default function FoldersRouter(
       res.send(folders);
     } catch (err) {
       res.status(500).send({ message: "Error fetching folders" });
+    }
+  });
+
+  router.get("/:id", async (req: Request, res: Response) => {
+    try {
+      const folders = await findFolderByIdUseCase.execute(
+        Number(req.params.id)
+      );
+      res.send(folders);
+    } catch (err) {
+      res.status(500).send({ message: "Error fetching folder" });
+    }
+  });
+
+  router.get("/:id/owner", async (req: Request, res: Response) => {
+    try {
+      const folders = await FindFolderByOwnerUseCase.execute(
+        Number(req.params.id)
+      );
+      res.send(folders);
+    } catch (err) {
+      res.status(500).send({ message: "Error fetching folder" });
     }
   });
 

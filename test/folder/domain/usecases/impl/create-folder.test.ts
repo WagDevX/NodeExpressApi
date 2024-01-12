@@ -2,6 +2,9 @@ import { Folder } from "../../entities/folder";
 import { FolderRepository } from "../../repos/folder-repository";
 
 export class MockFolderRepository implements FolderRepository {
+  findFolderById(id: number): Promise<Folder> {
+    throw new Error("Method not implemented.");
+  }
   getFolders(): Promise<Folder[]> {
     throw new Error("Method not implemented.");
   }

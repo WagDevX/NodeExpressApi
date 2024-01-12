@@ -5,6 +5,8 @@ export interface FolderRepository {
 
   getFolders(): Promise<Folder[]>;
 
+  findFolderById(id: number): Promise<Folder>;
+
   findFoldersByOwner(owner: number): Promise<Folder[]>;
 
   moveFolder(id: number, parentFolder: number): Promise<boolean>;

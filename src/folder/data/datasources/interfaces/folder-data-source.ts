@@ -6,7 +6,7 @@ export interface FolderDataSource {
     name: string,
     owner: number,
     parentFolder?: number
-  ): Promise<number>;
+  ): Promise<boolean>;
   renameFolder(id: number, name: string): Promise<boolean>;
   moveFolder(id: number, parentFolder: number): Promise<boolean>;
   deleteFolder(id: number): Promise<boolean>;

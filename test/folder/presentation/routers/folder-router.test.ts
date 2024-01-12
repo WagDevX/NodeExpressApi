@@ -7,6 +7,8 @@ import { MoveFolderUseCase } from "../../domain/usecases/interfaces/move-folder"
 import { RenameFolderUseCase } from "../../domain/usecases/interfaces/rename-folder";
 import FoldersRouter from "../../../../src/folder/presentation/routers/folder-router";
 import server from "../../../../src/server";
+import { FindFolderByIdUseCase } from "../../domain/usecases/interfaces/find-folder-by-id";
+import { FindFolderByOwnerUseCase } from "../../domain/usecases/interfaces/find-folder-by-owner";
 
 class MockGetFoldersUseCase implements GetFoldersUseCase {
   execute(): Promise<Folder[]> {
@@ -38,12 +40,26 @@ class MockMoveFolderUseCase implements MoveFolderUseCase {
   }
 }
 
+class MockFindFolderByIdUseCase {
+  execute(id: number): Promise<Folder> {
+    throw new Error("Method not implemented.");
+  }
+}
+
+class MockFindFolderByOwnerUseCase {
+  execute(owner: number): Promise<Folder[]> {
+    throw new Error("Method not implemented.");
+  }
+}
+
 describe("FolderRouter", () => {
   let mockCreateFolderUseCase: CreateFolderUseCase;
   let mockGetFoldersUseCase: GetFoldersUseCase;
   let mockrenameFolderUseCase: RenameFolderUseCase;
   let mockdeleteFolderUseCase: DeleteFolderUseCase;
   let mockmoveFolderUseCase: MoveFolderUseCase;
+  let mockFindFolderByIdUseCase: FindFolderByIdUseCase;
+  let mockFindFolderByOwnerUseCase: FindFolderByOwnerUseCase;
 
   beforeAll(() => {
     mockCreateFolderUseCase = new MockCreateFolderUseCase();
@@ -51,6 +67,8 @@ describe("FolderRouter", () => {
     mockrenameFolderUseCase = new MockRenameFolderUseCase();
     mockdeleteFolderUseCase = new MockDeleteFolderUseCase();
     mockmoveFolderUseCase = new MockMoveFolderUseCase();
+    mockFindFolderByIdUseCase = new MockFindFolderByIdUseCase();
+    mockFindFolderByOwnerUseCase = new MockFindFolderByOwnerUseCase();
 
     server.use(
       "/folder",
@@ -59,7 +77,9 @@ describe("FolderRouter", () => {
         mockCreateFolderUseCase,
         mockmoveFolderUseCase,
         mockrenameFolderUseCase,
-        mockdeleteFolderUseCase
+        mockdeleteFolderUseCase,
+        mockFindFolderByIdUseCase,
+        mockFindFolderByOwnerUseCase
       )
     );
   });
@@ -205,6 +225,58 @@ describe("FolderRouter", () => {
 
       expect(response.status).toBe(500);
       expect(mockmoveFolderUseCase.execute).toBeCalledTimes(1);
+    });
+  });
+
+  describe("GET /folder/:id", () => {
+    test("should return 200 with data", async () => {
+      const ExpectedData = { id: 1, name: "Folder 1", owner: 1 };
+      jest
+        .spyOn(mockFindFolderByIdUseCase, "execute")
+        .mockImplementation(() => Promise.resolve(ExpectedData));
+      const response = await request(server).get("/folder/1");
+      expect(response.status).toBe(200);
+      expect(mockFindFolderByIdUseCase.execute).toBeCalledTimes(1);
+      expect(response.body).toStrictEqual(ExpectedData);
+    });
+
+    test("GET /folder/:id returns 500 on use case error", async () => {
+      const ExpectedData = { id: 1, name: "Folder 1", owner: 1 };
+      jest
+        .spyOn(mockFindFolderByIdUseCase, "execute")
+        .mockImplementation(() => Promise.reject(Error()));
+      const response = await request(server).get("/folder/1");
+      expect(response.status).toBe(500);
+      expect(mockFindFolderByIdUseCase.execute).toBeCalledTimes(1);
+      expect(response.body).toStrictEqual({
+        message: "Error fetching folder",
+      });
+    });
+  });
+
+  describe("GET /folder/:id/owner", () => {
+    test("should return 200 with data", async () => {
+      const ExpectedData = [{ id: 1, name: "Folder 1", owner: 1 }];
+      jest
+        .spyOn(mockFindFolderByOwnerUseCase, "execute")
+        .mockImplementation(() => Promise.resolve(ExpectedData));
+      const response = await request(server).get("/folder/1/owner");
+      expect(response.status).toBe(200);
+      expect(mockFindFolderByOwnerUseCase.execute).toBeCalledTimes(1);
+      expect(response.body).toStrictEqual(ExpectedData);
+    });
+
+    test("GET /folder/:id/owner returns 500 on use case error", async () => {
+      const ExpectedData = [{ id: 1, name: "Folder 1", owner: 1 }];
+      jest
+        .spyOn(mockFindFolderByOwnerUseCase, "execute")
+        .mockImplementation(() => Promise.reject(Error()));
+      const response = await request(server).get("/folder/1/owner");
+      expect(response.status).toBe(500);
+      expect(mockFindFolderByOwnerUseCase.execute).toBeCalledTimes(1);
+      expect(response.body).toStrictEqual({
+        message: "Error fetching folder",
+      });
     });
   });
 });
