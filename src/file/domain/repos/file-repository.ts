@@ -1,4 +1,4 @@
-import { File } from "../../entities/file";
+import { File } from "../entities/file";
 
 export interface FileRepository {
     createFile(file: File) : Promise<boolean>;
@@ -7,5 +7,5 @@ export interface FileRepository {
 
     renameFile(id: number, name: string) : Promise<boolean>;
 
-    findFileByFolder(id: number) : Promisse<boolean>;
+    findFileByFolder(id: number) : Promise<boolean>;
 }

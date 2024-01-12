@@ -1,3 +1,3 @@
-export interface CreateFileUseCase {
-    execute(id, number, name: string) : Promise<boolean>
+export interface RenameFileUseCase {
+    execute(id: number, name: string) : Promise<boolean>
 }
