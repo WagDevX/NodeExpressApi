@@ -1,7 +1,7 @@
 import { File } from "../file/domain/entities/file";
 import { FileRepository } from "../file/domain/repos/file-repository";
 
-class MockFileRepository implements FileRepository {
+export class MockFileRepository implements FileRepository {
     createFile(file: File): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
