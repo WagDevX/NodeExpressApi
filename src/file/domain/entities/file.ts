@@ -3,5 +3,7 @@ export interface File {
     fileName : string,
     downloadUrl: string, 
     owner: number,
+    extension: string,
+    size: number,
     parentFolder?: number
 }

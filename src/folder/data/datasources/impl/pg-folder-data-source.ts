@@ -24,7 +24,7 @@ export class PGFolderDataSource implements FolderDataSource {
   }
   async findFolderById(id: number): Promise<Folder> {
     const dbResponse = await this.db.query(
-      `SELECT * FROM ${DB_TABLE} WHERE id = ${id}`
+      `SELECT * FROM ${DB_TABLE} WHERE id = ${id} limit 1`
     );
     const result = dbResponse.rows.map((item) => {
       return {
@@ -51,12 +51,12 @@ export class PGFolderDataSource implements FolderDataSource {
     return result;
   }
   async createFolder(folder: Folder): Promise<void> {
-    await this.db.query(`CREATE TABLE IF NOT EXISTS ${DB_TABLE} (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      parentFolder INTEGER REFERENCES Folder(id),
-      owner INTEGER
-      )`);
+    // await this.db.query(`CREATE TABLE IF NOT EXISTS ${DB_TABLE} (
+    //   id SERIAL PRIMARY KEY,
+    //   name VARCHAR(255) NOT NULL,
+    //   parentFolder INTEGER REFERENCES Folder(id),
+    //   owner INTEGER
+    //   )`);
     await this.db.query(
       `INSERT INTO ${DB_TABLE} (name, owner, parentFolder) VALUES ('${
         folder.name

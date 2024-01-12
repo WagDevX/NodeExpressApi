@@ -23,7 +23,7 @@ describe("PG DataSource", () => {
       })
     );
     const result = await ds.getFolders();
-    expect(mockDataBase.query).toHaveBeenCalledWith(`SELECT * FROM folders`);
+    expect(mockDataBase.query).toHaveBeenCalledWith(`SELECT * FROM folder`);
     expect(result).toStrictEqual([
       { id: 1, name: "folder1", owner: 1, parentFolder: undefined },
     ]);
@@ -39,7 +39,7 @@ describe("PG DataSource", () => {
     );
     const result = await ds.findFolderById(1);
     expect(mockDataBase.query).toHaveBeenCalledWith(
-      `SELECT * FROM folders WHERE id = 1 limit 1`
+      `SELECT * FROM folder WHERE id = 1 limit 1`
     );
     expect(result).toStrictEqual({
       id: 1,
@@ -59,7 +59,7 @@ describe("PG DataSource", () => {
     );
     const result = await ds.findFoldersByOwner(1);
     expect(mockDataBase.query).toHaveBeenCalledWith(
-      `SELECT * FROM folders WHERE owner = 1`
+      `SELECT * FROM folder WHERE owner = 1 limit 1`
     );
     expect(result).toStrictEqual([
       { id: 1, name: "folder1", owner: 1, parentFolder: undefined },
@@ -76,7 +76,7 @@ describe("PG DataSource", () => {
       parentFolder: undefined,
     });
     expect(mockDataBase.query).toHaveBeenCalledWith(
-      `INSERT INTO folders (name, owner, parentFolder) VALUES ('folder1', 1, null)`
+      `INSERT INTO folder (name, owner, parentFolder) VALUES ('folder1', 1, undefined)`
     );
     expect(result).toBeUndefined();
   });
@@ -86,7 +86,7 @@ describe("PG DataSource", () => {
 
     const result = await ds.renameFolder(1, "folder1");
     expect(mockDataBase.query).toHaveBeenCalledWith(
-      `UPDATE folders SET name = 'folder1' WHERE id = 1`
+      `UPDATE folder SET name = 'folder1' WHERE id = 1`
     );
     expect(result).toBeUndefined();
   });
@@ -96,7 +96,7 @@ describe("PG DataSource", () => {
 
     const result = await ds.moveFolder(1, 2);
     expect(mockDataBase.query).toHaveBeenCalledWith(
-      `UPDATE folders SET parentFolder = 2 WHERE id = 1`
+      `UPDATE folder SET parentFolder = 2 WHERE id = 1`
     );
     expect(result).toBeUndefined();
   });
@@ -106,7 +106,7 @@ describe("PG DataSource", () => {
 
     const result = await ds.deleteFolder(1);
     expect(mockDataBase.query).toHaveBeenCalledWith(
-      `DELETE FROM folders WHERE id = 1`
+      `DELETE FROM folder WHERE id = 1`
     );
     expect(result).toBeUndefined();
   });

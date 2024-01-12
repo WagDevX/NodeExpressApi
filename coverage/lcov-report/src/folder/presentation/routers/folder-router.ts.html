@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>50/50</span>
+                <span class='fraction'>53/53</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>43/43</span>
+                <span class='fraction'>46/46</span>
             </div>
         
             
@@ -159,7 +159,10 @@
 <a name='L94'></a><a href='#L94'>94</a>
 <a name='L95'></a><a href='#L95'>95</a>
 <a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L97'></a><a href='#L97'>97</a>
+<a name='L98'></a><a href='#L98'>98</a>
+<a name='L99'></a><a href='#L99'>99</a>
+<a name='L100'></a><a href='#L100'>100</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -185,6 +188,19 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,20 +218,10 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -280,6 +286,7 @@ export default function FoldersRouter(
       const folders = await getFoldersUseCase.execute();
       res.send(folders);
     } catch (err) {
+      console.log(err);
       res.status(500).send({ message: "Error fetching folders" });
     }
   });
@@ -287,10 +294,11 @@ export default function FoldersRouter(
   router.get("/:id", async (req: Request, res: Response) =&gt; {
     try {
       const folders = await findFolderByIdUseCase.execute(
-        Number(req.params.id)
+        Number(req.query.id)
       );
       res.send(folders);
     } catch (err) {
+      console.log(err)
       res.status(500).send({ message: "Error fetching folder" });
     }
   });
@@ -298,7 +306,7 @@ export default function FoldersRouter(
   router.get("/:id/owner", async (req: Request, res: Response) =&gt; {
     try {
       const folders = await FindFolderByOwnerUseCase.execute(
-        Number(req.params.id)
+        Number(req.query.id)
       );
       res.send(folders);
     } catch (err) {
@@ -312,13 +320,14 @@ export default function FoldersRouter(
       res.statusCode = 201;
       res.json({ message: "Created" });
     } catch (err) {
+      console.log(err);
       res.status(500).send({ message: "Error creating folder" });
     }
   });
 &nbsp;
   router.put("/:id", async (req: Request, res: Response) =&gt; {
     try {
-      await renameFolderUseCase.execute(Number(req.params.id), req.body.name);
+      await renameFolderUseCase.execute(Number(req.query.id), req.body.name);
       res.statusCode = 201;
       res.json({ message: "Updated" });
     } catch (err) {
@@ -358,7 +367,7 @@ export default function FoldersRouter(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-01-12T13:08:10.884Z
+                at 2024-01-12T21:57:34.964Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
