@@ -26,6 +26,12 @@ import { GetFolders } from "./folder/domain/usecases/impl/get-folders";
 import { MoveFolder } from "./folder/domain/usecases/impl/move-folder";
 import { RenameFolder } from "./folder/domain/usecases/impl/rename-folder";
 import FoldersRouter from "./folder/presentation/routers/folder-router";
+import { PermissionDataSourceImpl } from "./permissions/data/datasources/impl/permissions-data-source-impl";
+import { PermissionsRepositoryImpl } from "./permissions/data/repos/permissions-repository-impl";
+import { CreatePermission } from "./permissions/domain/usecases/impl/create-permission";
+import { GetPermissions } from "./permissions/domain/usecases/impl/get-permissions";
+import { UpdatePermission } from "./permissions/domain/usecases/impl/update-permission";
+import PermissionsRouter from "./permissions/presentation/routers/permissions-router";
 import server from "./server";
 
 var Pool = require("pg-pool");
@@ -45,6 +51,7 @@ async function getPGDS() {
     folderDataSource: new PGFolderDataSource(db),
     fileDataSource: new FileDataSourceImpl(db),
     authDataSource: new AuthDataSourceImpl(db),
+    permissionsDataSource : new PermissionDataSourceImpl(db)
   };
 }
 
@@ -81,8 +88,16 @@ async function getPGDS() {
     new ResetPassword(new AuthRepositoryImpl(dataSource.authDataSource))
   );
 
+  const permissionsMiddleWare = PermissionsRouter(
+    new CreatePermission(new PermissionsRepositoryImpl(dataSource.permissionsDataSource)),
+    new UpdatePermission(new PermissionsRepositoryImpl(dataSource.permissionsDataSource)),
+    new GetPermissions(new PermissionsRepositoryImpl(dataSource.permissionsDataSource))
+  );
+
+
   server.use("/folder", folderMiddleWare);
   server.use("/auth", authMiddleWare);
   server.use("/files", fileMiddleWare);
+  server.use("/permissions", permissionsMiddleWare);
   server.listen(4000, () => console.log("Running on http://localhost:4000"));
 })();
