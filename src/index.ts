@@ -1,3 +1,13 @@
+import { AuthDataSourceImpl } from "./auth/data/datasources/impl/auth-data-source-impl";
+import { AuthRepositoryImpl } from "./auth/data/repos/auth-repository-impl";
+import { ChangePassword } from "./auth/domain/usecases/impl/change-password";
+import { ChangeRole } from "./auth/domain/usecases/impl/change-role";
+import { ChangeUserName } from "./auth/domain/usecases/impl/change-username";
+import { GetUsers } from "./auth/domain/usecases/impl/get-users";
+import { LoginWithUserNameAndPassword } from "./auth/domain/usecases/impl/login";
+import { RegisterUser } from "./auth/domain/usecases/impl/register-user";
+import { ResetPassword } from "./auth/domain/usecases/impl/reset-password";
+import AuthRouter from "./auth/presentation/router/auth-router";
 import { FileDataSourceImpl } from "./file/data/datasources/impl/file-datasource-impl";
 import { FileRepositoryImpl } from "./file/data/repos/file-repository-impl";
 import { CreateFile } from "./file/domain/usecases/impl/create-file";
@@ -34,6 +44,7 @@ async function getPGDS() {
   return {
     folderDataSource: new PGFolderDataSource(db),
     fileDataSource: new FileDataSourceImpl(db),
+    authDataSource: new AuthDataSourceImpl(db),
   };
 }
 
@@ -58,7 +69,20 @@ async function getPGDS() {
     new FindFileByFolder(new FileRepositoryImpl(dataSource.fileDataSource))
   );
 
+  const authMiddleWare = AuthRouter(
+    new LoginWithUserNameAndPassword(
+      new AuthRepositoryImpl(dataSource.authDataSource)
+    ),
+    new RegisterUser(new AuthRepositoryImpl(dataSource.authDataSource)),
+    new ChangeRole(new AuthRepositoryImpl(dataSource.authDataSource)),
+    new ChangeUserName(new AuthRepositoryImpl(dataSource.authDataSource)),
+    new ChangePassword(new AuthRepositoryImpl(dataSource.authDataSource)),
+    new GetUsers(new AuthRepositoryImpl(dataSource.authDataSource)),
+    new ResetPassword(new AuthRepositoryImpl(dataSource.authDataSource))
+  );
+
   server.use("/folder", folderMiddleWare);
+  server.use("/auth", authMiddleWare);
   server.use("/files", fileMiddleWare);
   server.listen(4000, () => console.log("Running on http://localhost:4000"));
 })();

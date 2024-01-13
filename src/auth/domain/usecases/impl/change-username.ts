@@ -1,17 +1,15 @@
 import { AuthRepository } from "../../repos/auth-repository";
-import { ChangePasswordUseCase } from "../interfaces/change-password";
+import { ChangeUserNameUseCase } from "../interfaces/change-username";
 
-export class ChangeUserName implements ChangePasswordUseCase {
+export class ChangeUserName implements ChangeUserNameUseCase {
   constructor(private readonly repository: AuthRepository) {}
   async execute(
     id: number,
-    newPassword: string,
-    oldPassword: string
+    name: string,
   ): Promise<boolean> {
-    return await this.repository.changePassword(
+    return await this.repository.changeUserName(
       id,
-      newPassword,
-      oldPassword
+      name
     );
   }
 }
