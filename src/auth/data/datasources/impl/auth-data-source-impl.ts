@@ -8,30 +8,52 @@ export class AuthDataSourceImpl implements AuthDataSource {
     this.db = db;
   }
 
-  loginWithUserNameAndPassword(user: User): Promise<User> {
-    throw new Error("Method not implemented.");
+  async loginWithUserNameAndPassword(user: User): Promise<User> {
+    const result = await this.db.query(
+      `SELECT * FROM users WHERE username = ? AND password = ?`,
+      [user.username, user.password]
+    );
+    if (result.rows.length === 0) {
+      throw new Error("Authentication failed");
+    }
+    return result.rows[0];
   }
-  registerUser(user: User): Promise<User> {
-    throw new Error("Method not implemented.");
+  async registerUser(user: User): Promise<User> {
+    const result = await this.db.query(
+      `INSERT INTO users (username, password, role) VALUES (${user.username}, ${user.password}, 'user') \n` +
+      `SELECT * FROM users WHERE username = ${user.username} AND password = ${user.password}`
+    );
+    return result.rows[0];
   }
-  changeUserName(token: string, id: number, username: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async changeUserName(id: number, username: string): Promise<void> {
+    await this.db.query(
+      `UPDATE users SET username = ${username} WHERE id = ${id};`
+    );
   }
-  resetPassword(token: string, id: number, password: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async resetPassword(id: number, password: string): Promise<void> {
+    await this.db.query(
+      `UPDATE users SET password = ${password} WHERE id = ${id};`
+    );
   }
-  changeRole(token: string, id: number, role: string): Promise<void> {
-    throw new Error("Method not implemented.");
+  async changeRole(id: number, role: string): Promise<void> {
+    await this.db.query(
+      `UPDATE users SET role = ${role} WHERE id = ${id};`
+    );
   }
-  changePassword(
-    token: string,
+  async changePassword(
     id: number,
     oldPassword: string,
     newPassword: string
   ): Promise<void> {
-    throw new Error("Method not implemented.");
+    await this.db.query(
+      `UPDATE users SET password = ${newPassword} WHERE id = ${id} AND password = ${oldPassword};`
+    );
   }
-  getUsers(token: string): Promise<User[]> {
-    throw new Error("Method not implemented.");
+
+  async getUsers(): Promise<User[]> {
+    const result = await this.db.query(
+      `SELECT * FROM users`
+    );
+    return result.rows;
   }
 }

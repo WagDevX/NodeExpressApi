@@ -16,18 +16,152 @@ describe("AuthDataSourceImpl", () => {
     jest.clearAllMocks();
   });
 
-  test("should register user", async () => {
+  test("should register user and return", async () => {
     const db = new AuthDataSourceImpl(mockDB);
+    
     const user: User = {
       id: 1,
       username: "test",
       password: "test",
     };
+    const mockQueryResult = {
+      rows: [user],
+    };
+    (mockDB.query as jest.Mock).mockResolvedValue(mockQueryResult);
 
     await db.registerUser(user);
 
     expect(mockDB.query).toHaveBeenCalledWith(
-      `INSERT INTO users (username, password) VALUES ('test', 'test');`
+      `INSERT INTO users (username, password, role) VALUES (${user.username}, ${user.password}, 'user') \n` +
+      `SELECT * FROM users WHERE username = ${user.username} AND password = ${user.password}`
     );
   });
+
+  test("should login user and return", async () => {
+    const db = new AuthDataSourceImpl(mockDB);
+    
+    const user: User = {
+      id: 1,
+      username: "test",
+      password: "test",
+    };
+    const mockQueryResult = {
+      rows: [user],
+    };
+    (mockDB.query as jest.Mock).mockResolvedValue(mockQueryResult);
+
+    await db.loginWithUserNameAndPassword(user);
+
+    expect(mockDB.query).toHaveBeenCalledWith(
+      `SELECT * FROM users WHERE username = ? AND password = ?`,
+      [user.username, user.password]
+    );
+  });
+
+  test("should change username", async () => {
+    const db = new AuthDataSourceImpl(mockDB);
+    
+    const id = 1;
+    const username = "test";
+    const mockQueryResult = {
+      rows: [],
+    };
+    (mockDB.query as jest.Mock).mockResolvedValue(mockQueryResult);
+
+    await db.changeUserName(id, username);
+
+    expect(mockDB.query).toHaveBeenCalledWith(
+      `UPDATE users SET username = ${username} WHERE id = ${id};`
+    );
+  });
+
+  test("should reset password", async () => {
+    const db = new AuthDataSourceImpl(mockDB);
+    
+    const id = 1;
+    const password = "test";
+    const mockQueryResult = {
+      rows: [],
+    };
+    (mockDB.query as jest.Mock).mockResolvedValue(mockQueryResult);
+
+    await db.resetPassword(id, password);
+
+    expect(mockDB.query).toHaveBeenCalledWith(
+      `UPDATE users SET password = ${password} WHERE id = ${id};`
+    );
+  });
+
+  test("should change role", async () => {
+    const db = new AuthDataSourceImpl(mockDB);
+    
+    const id = 1;
+    const role = "test";
+    const mockQueryResult = {
+      rows: [],
+    };
+    (mockDB.query as jest.Mock).mockResolvedValue(mockQueryResult);
+
+    await db.changeRole(id, role);
+
+    expect(mockDB.query).toHaveBeenCalledWith(
+      `UPDATE users SET role = ${role} WHERE id = ${id};`
+    );
+  });
+
+  test("should change password", async () => {
+    const db = new AuthDataSourceImpl(mockDB);
+    
+    const id = 1;
+    const oldPassword = "test";
+    const newPassword = "test";
+    const mockQueryResult = {
+      rows: [],
+    };
+    (mockDB.query as jest.Mock).mockResolvedValue(mockQueryResult);
+
+    await db.changePassword(id, oldPassword, newPassword);
+
+    expect(mockDB.query).toHaveBeenCalledWith(
+      `UPDATE users SET password = ${newPassword} WHERE id = ${id} AND password = ${oldPassword};`
+    );
+  });
+
+  test("should get users", async () => {
+    const db = new AuthDataSourceImpl(mockDB);
+    
+    const user: User = {
+      id: 1,
+      username: "test",
+      password: "test",
+    };
+    const mockQueryResult = {
+      rows: [user],
+    };
+    (mockDB.query as jest.Mock).mockResolvedValue(mockQueryResult);
+
+    await db.getUsers();
+
+    expect(mockDB.query).toHaveBeenCalledWith(
+      `SELECT * FROM users`
+    );
+  });
+
+  test("should throw error when login failed", async () => {
+    const db = new AuthDataSourceImpl(mockDB);
+    
+    const user: User = {
+      id: 1,
+      username: "test",
+      password: "test",
+    };
+    const mockQueryResult = {
+      rows: [],
+    };
+    (mockDB.query as jest.Mock).mockResolvedValue(mockQueryResult);
+
+    await expect(db.loginWithUserNameAndPassword(user)).rejects.toThrowError("Authentication failed");
+  });
+
+
 });
