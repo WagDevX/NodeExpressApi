@@ -10,7 +10,6 @@ describe("ResetPasswordUseCase", () => {
   });
 
   test("should return true if password is reset", async () => {
-    const token = "valid_token";
     const id = 1;
     const newPassword = "new_password";
 
@@ -19,7 +18,6 @@ describe("ResetPasswordUseCase", () => {
       .mockImplementation(async () => true);
 
     const result = await mockAuthRepository.resetPassword(
-      token,
       id,
       newPassword
     );

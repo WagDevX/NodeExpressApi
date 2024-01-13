@@ -23,7 +23,7 @@ describe("GetUsersUseCase", () => {
       .spyOn(mockAuthRepository, "getUsers")
       .mockImplementation(async () => expectedData);
 
-    const result = await mockAuthRepository.getUsers("token");
+    const result = await mockAuthRepository.getUsers();
 
     expect(result).toStrictEqual(expectedData);
   });

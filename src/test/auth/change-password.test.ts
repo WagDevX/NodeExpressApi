@@ -9,27 +9,25 @@ export class MockAuthRepository implements AuthRepository {
     throw new Error("Method not implemented.");
   }
   changeUserName(
-    token: string,
     id: number,
     username: string
   ): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  resetPassword(token: string, id: number, password: string): Promise<boolean> {
+  resetPassword(id: number, password: string): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  changeRole(token: string, id: number, role: string): Promise<boolean> {
+  changeRole(id: number, role: string): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
   changePassword(
-    token: string,
     id: number,
     oldPassword: string,
     newPassword: string
   ): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  getUsers(token: string): Promise<User[]> {
+  getUsers(): Promise<User[]> {
     throw new Error("Method not implemented.");
   }
 }
@@ -44,7 +42,6 @@ describe("ChangePasswordUseCase", () => {
 
   test("should return true if password is changed", async () => {
     const inputData = {
-      token: "token",
       id: 1,
       oldPassword: "oldPassword",
       newPassword: "newPassword",
@@ -55,7 +52,6 @@ describe("ChangePasswordUseCase", () => {
       .mockImplementation(async () => true);
 
     const result = await mockAuthRepository.changePassword(
-      inputData.token,
       inputData.id,
       inputData.oldPassword,
       inputData.newPassword

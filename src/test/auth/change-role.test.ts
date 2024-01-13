@@ -9,7 +9,6 @@ describe("ChangeRoleUseCase", () => {
   });
 
   test("should return true if role is changed", async () => {
-    const token = "valid_token";
     const id = 1;
     const role = "admin";
 
@@ -17,7 +16,7 @@ describe("ChangeRoleUseCase", () => {
       .spyOn(mockAuthRepository, "changeRole")
       .mockImplementation(async () => true);
 
-    const result = await mockAuthRepository.changeRole(token, id, role);
+    const result = await mockAuthRepository.changeRole(id, role);
 
     expect(result).toBe(true);
   });
