@@ -17,7 +17,7 @@ export class PGFolderDataSource implements FolderDataSource {
         id: item.id,
         name: item.name,
         owner: item.owner,
-        parentFolder: item.parentFolder,
+        parentFolder: item.parentfolder ? item.parentfolder : undefined,
       };
     });
     return result;
@@ -31,21 +31,21 @@ export class PGFolderDataSource implements FolderDataSource {
         id: item.id,
         name: item.name,
         owner: item.owner,
-        parentFolder: item.parentFolder,
+        parentFolder: item.parentfolder ? item.parentfolder : undefined,
       };
     });
     return result[0];
   }
   async findFoldersByOwner(owner: number): Promise<Folder[]> {
     const dbResponse = await this.db.query(
-      `SELECT * FROM ${DB_TABLE} WHERE owner = ${owner} limit 1`
+      `SELECT * FROM ${DB_TABLE} WHERE owner = ${owner}`
     );
     const result = dbResponse.rows.map((item) => {
       return {
         id: item.id,
         name: item.name,
         owner: item.owner,
-        parentFolder: item.parentFolder ? item.parentFolder : undefined,
+        parentFolder: item.parentfolder ? item.parentfolder : undefined,
       };
     });
     return result;
@@ -57,12 +57,9 @@ export class PGFolderDataSource implements FolderDataSource {
     //   parentFolder INTEGER REFERENCES Folder(id),
     //   owner INTEGER
     //   )`);
+    console.log(folder);
     await this.db.query(
-      `INSERT INTO ${DB_TABLE} (name, owner, parentFolder) VALUES ('${
-        folder.name
-      }', ${folder.owner}, ${
-        folder.parentFolder
-      })`
+      `INSERT INTO ${DB_TABLE} (name, owner, parentFolder) VALUES ('${folder.name}', ${folder.owner}, ${folder.parentFolder})`
     );
   }
   async renameFolder(id: number, name: string): Promise<void> {

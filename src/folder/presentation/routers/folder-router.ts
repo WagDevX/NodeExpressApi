@@ -18,7 +18,7 @@ export default function FoldersRouter(
 ) {
   const router = express.Router();
 
-  router.get("/", async (req: Request, res: Response) => {
+  router.get("/getall", async (req: Request, res: Response) => {
     try {
       const folders = await getFoldersUseCase.execute();
       res.send(folders);
@@ -31,19 +31,19 @@ export default function FoldersRouter(
   router.get("/:id", async (req: Request, res: Response) => {
     try {
       const folders = await findFolderByIdUseCase.execute(
-        Number(req.query.id)
+        Number(req.params.id)
       );
       res.send(folders);
     } catch (err) {
-      console.log(err)
+      console.log(err);
       res.status(500).send({ message: "Error fetching folder" });
     }
   });
 
-  router.get("/:id/owner", async (req: Request, res: Response) => {
+  router.get("/owner/:id", async (req: Request, res: Response) => {
     try {
       const folders = await FindFolderByOwnerUseCase.execute(
-        Number(req.query.id)
+        Number(req.params.id)
       );
       res.send(folders);
     } catch (err) {
@@ -62,7 +62,7 @@ export default function FoldersRouter(
     }
   });
 
-  router.put("/:id", async (req: Request, res: Response) => {
+  router.put("/:id/rename", async (req: Request, res: Response) => {
     try {
       await renameFolderUseCase.execute(Number(req.query.id), req.body.name);
       res.statusCode = 201;
@@ -72,7 +72,7 @@ export default function FoldersRouter(
     }
   });
 
-  router.put("/:id/move", async (req: Request, res: Response) => {
+  router.put("/move/:id", async (req: Request, res: Response) => {
     try {
       await moveFolderUseCase.execute(
         Number(req.params.id),

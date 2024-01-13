@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage generated="1705104856209" clover="3.2.0">
-  <project timestamp="1705104856209" name="All files">
-    <metrics statements="98" coveredstatements="98" conditionals="2" coveredconditionals="1" methods="40" coveredmethods="40" elements="140" coveredelements="139" complexity="0" loc="98" ncloc="98" packages="5" files="5" classes="5"/>
+<coverage generated="1705111875327" clover="3.2.0">
+  <project timestamp="1705111875327" name="All files">
+    <metrics statements="99" coveredstatements="80" conditionals="6" coveredconditionals="3" methods="40" coveredmethods="32" elements="145" coveredelements="115" complexity="0" loc="99" ncloc="99" packages="5" files="5" classes="5"/>
     <package name="src">
       <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
-      <file name="server.ts" path="/workspaces/NodeExpressApi/src/server.ts">
+      <file name="server.ts" path="C:\Users\waggt\Desktop\DesafioPrinter\NodeExpressApi\src\server.ts">
         <metrics statements="4" coveredstatements="4" conditionals="0" coveredconditionals="0" methods="0" coveredmethods="0"/>
         <line num="1" count="1" type="stmt"/>
         <line num="3" count="1" type="stmt"/>
@@ -14,7 +14,7 @@
     </package>
     <package name="src.file.data.repos">
       <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
-      <file name="file-repository-impl.ts" path="/workspaces/NodeExpressApi/src/file/data/repos/file-repository-impl.ts">
+      <file name="file-repository-impl.ts" path="C:\Users\waggt\Desktop\DesafioPrinter\NodeExpressApi\src\file\data\repos\file-repository-impl.ts">
         <metrics statements="12" coveredstatements="12" conditionals="0" coveredconditionals="0" methods="6" coveredmethods="6"/>
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="5" type="stmt"/>
@@ -31,9 +31,9 @@
       </file>
     </package>
     <package name="src.folder.data.datasources.impl">
-      <metrics statements="20" coveredstatements="20" conditionals="2" coveredconditionals="1" methods="11" coveredmethods="11"/>
-      <file name="pg-folder-data-source.ts" path="/workspaces/NodeExpressApi/src/folder/data/datasources/impl/pg-folder-data-source.ts">
-        <metrics statements="20" coveredstatements="20" conditionals="2" coveredconditionals="1" methods="11" coveredmethods="11"/>
+      <metrics statements="21" coveredstatements="21" conditionals="6" coveredconditionals="3" methods="11" coveredmethods="11"/>
+      <file name="pg-folder-data-source.ts" path="C:\Users\waggt\Desktop\DesafioPrinter\NodeExpressApi\src\folder\data\datasources\impl\pg-folder-data-source.ts">
+        <metrics statements="21" coveredstatements="21" conditionals="6" coveredconditionals="3" methods="11" coveredmethods="11"/>
         <line num="5" count="1" type="stmt"/>
         <line num="6" count="1" type="stmt"/>
         <line num="7" count="1" type="stmt"/>
@@ -51,14 +51,15 @@
         <line num="44" count="1" type="stmt"/>
         <line num="51" count="1" type="stmt"/>
         <line num="60" count="1" type="stmt"/>
-        <line num="69" count="1" type="stmt"/>
-        <line num="74" count="1" type="stmt"/>
-        <line num="79" count="1" type="stmt"/>
+        <line num="61" count="1" type="stmt"/>
+        <line num="66" count="1" type="stmt"/>
+        <line num="71" count="1" type="stmt"/>
+        <line num="76" count="1" type="stmt"/>
       </file>
     </package>
     <package name="src.folder.data.repos">
       <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
-      <file name="folder-repository-impl.ts" path="/workspaces/NodeExpressApi/src/folder/data/repos/folder-repository-impl.ts">
+      <file name="folder-repository-impl.ts" path="C:\Users\waggt\Desktop\DesafioPrinter\NodeExpressApi\src\folder\data\repos\folder-repository-impl.ts">
         <metrics statements="16" coveredstatements="16" conditionals="0" coveredconditionals="0" methods="8" coveredmethods="8"/>
         <line num="5" count="1" type="stmt"/>
         <line num="8" count="7" type="stmt"/>
@@ -79,29 +80,29 @@
       </file>
     </package>
     <package name="src.folder.presentation.routers">
-      <metrics statements="46" coveredstatements="46" conditionals="0" coveredconditionals="0" methods="15" coveredmethods="15"/>
-      <file name="folder-router.ts" path="/workspaces/NodeExpressApi/src/folder/presentation/routers/folder-router.ts">
-        <metrics statements="46" coveredstatements="46" conditionals="0" coveredconditionals="0" methods="15" coveredmethods="15"/>
+      <metrics statements="46" coveredstatements="27" conditionals="0" coveredconditionals="0" methods="15" coveredmethods="7"/>
+      <file name="folder-router.ts" path="C:\Users\waggt\Desktop\DesafioPrinter\NodeExpressApi\src\folder\presentation\routers\folder-router.ts">
+        <metrics statements="46" coveredstatements="27" conditionals="0" coveredconditionals="0" methods="15" coveredmethods="7"/>
         <line num="1" count="1" type="stmt"/>
         <line num="10" count="1" type="stmt"/>
         <line num="19" count="1" type="stmt"/>
-        <line num="21" count="2" type="stmt"/>
-        <line num="22" count="2" type="stmt"/>
-        <line num="23" count="2" type="stmt"/>
-        <line num="24" count="1" type="stmt"/>
-        <line num="26" count="1" type="stmt"/>
-        <line num="27" count="1" type="stmt"/>
+        <line num="21" count="1" type="stmt"/>
+        <line num="22" count="0" type="stmt"/>
+        <line num="23" count="0" type="stmt"/>
+        <line num="24" count="0" type="stmt"/>
+        <line num="26" count="0" type="stmt"/>
+        <line num="27" count="0" type="stmt"/>
         <line num="31" count="2" type="stmt"/>
         <line num="32" count="2" type="stmt"/>
         <line num="33" count="2" type="stmt"/>
         <line num="36" count="1" type="stmt"/>
         <line num="38" count="1" type="stmt"/>
         <line num="39" count="1" type="stmt"/>
-        <line num="43" count="2" type="stmt"/>
-        <line num="44" count="2" type="stmt"/>
-        <line num="45" count="2" type="stmt"/>
-        <line num="48" count="1" type="stmt"/>
-        <line num="50" count="1" type="stmt"/>
+        <line num="43" count="1" type="stmt"/>
+        <line num="44" count="0" type="stmt"/>
+        <line num="45" count="0" type="stmt"/>
+        <line num="48" count="0" type="stmt"/>
+        <line num="50" count="0" type="stmt"/>
         <line num="54" count="2" type="stmt"/>
         <line num="55" count="2" type="stmt"/>
         <line num="56" count="2" type="stmt"/>
@@ -109,18 +110,18 @@
         <line num="58" count="1" type="stmt"/>
         <line num="60" count="1" type="stmt"/>
         <line num="61" count="1" type="stmt"/>
-        <line num="65" count="2" type="stmt"/>
-        <line num="66" count="2" type="stmt"/>
-        <line num="67" count="2" type="stmt"/>
-        <line num="68" count="1" type="stmt"/>
-        <line num="69" count="1" type="stmt"/>
-        <line num="71" count="1" type="stmt"/>
-        <line num="75" count="2" type="stmt"/>
-        <line num="76" count="2" type="stmt"/>
-        <line num="77" count="2" type="stmt"/>
-        <line num="81" count="1" type="stmt"/>
-        <line num="82" count="1" type="stmt"/>
-        <line num="84" count="1" type="stmt"/>
+        <line num="65" count="1" type="stmt"/>
+        <line num="66" count="0" type="stmt"/>
+        <line num="67" count="0" type="stmt"/>
+        <line num="68" count="0" type="stmt"/>
+        <line num="69" count="0" type="stmt"/>
+        <line num="71" count="0" type="stmt"/>
+        <line num="75" count="1" type="stmt"/>
+        <line num="76" count="0" type="stmt"/>
+        <line num="77" count="0" type="stmt"/>
+        <line num="81" count="0" type="stmt"/>
+        <line num="82" count="0" type="stmt"/>
+        <line num="84" count="0" type="stmt"/>
         <line num="88" count="2" type="stmt"/>
         <line num="89" count="2" type="stmt"/>
         <line num="90" count="2" type="stmt"/>
