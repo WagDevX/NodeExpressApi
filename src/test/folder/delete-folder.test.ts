@@ -1,4 +1,4 @@
-import { FolderRepository } from "../folder/domain/repos/folder-repository";
+import { FolderRepository } from "../../folder/domain/repos/folder-repository";
 import { MockFolderRepository } from "./create-folder.test";
 
 describe("DeleteFolderUseCase", () => {

@@ -1,11 +1,11 @@
-import { File } from "../file/domain/entities/file";
-import { CreateFileUseCase } from "../file/domain/usecases/interfaces/create-file";
-import { DeleteFileUseCase } from "../file/domain/usecases/interfaces/delete-file";
-import { FindFileByFolderUseCase } from "../file/domain/usecases/interfaces/find-file-by-folder";
-import { MoveFileUseCase } from "../file/domain/usecases/interfaces/move-file";
-import { RenameFileUseCase } from "../file/domain/usecases/interfaces/rename-file";
-import FileRouter from "../file/presentation/routers/file-router";
-import server from "../server";
+import { File } from "../../file/domain/entities/file";
+import { CreateFileUseCase } from "../../file/domain/usecases/interfaces/create-file";
+import { DeleteFileUseCase } from "../../file/domain/usecases/interfaces/delete-file";
+import { FindFileByFolderUseCase } from "../../file/domain/usecases/interfaces/find-file-by-folder";
+import { MoveFileUseCase } from "../../file/domain/usecases/interfaces/move-file";
+import { RenameFileUseCase } from "../../file/domain/usecases/interfaces/rename-file";
+import FileRouter from "../../file/presentation/routers/file-router";
+import server from "../../server";
 import request from "supertest";
 
 class MockCreateFileUseCase implements CreateFileUseCase {

@@ -1,6 +1,6 @@
-import { FileDataSourceImpl } from "../file/data/datasources/impl/file-datasource-impl";
-import { File } from "../file/domain/entities/file";
-import { SQLDatabaseWrapper } from "../folder/data/datasources/wrapper/sql-database-wrapper";
+import { FileDataSourceImpl } from "../../file/data/datasources/impl/file-datasource-impl";
+import { File } from "../../file/domain/entities/file";
+import { SQLDatabaseWrapper } from "../../folder/data/datasources/wrapper/sql-database-wrapper";
 
 describe("File Data Source", () => {
   let mockDb: SQLDatabaseWrapper;
@@ -29,8 +29,7 @@ describe("File Data Source", () => {
     await db.createFile(file);
 
     expect(mockDb.query).toHaveBeenCalledWith(
-      `INSERT INTO files (fileName, downloadUrl, extension, owner, parentFolder, size) 
-      VALUES ('${file.fileName}', ${file.downloadUrl}, ${file.extension}, '${file.owner}', '${file.parentFolder}', '${file.size}');`
+      `INSERT INTO files (fileName, owner, downloadUrl, parentFolder, extension, size) VALUES ('test', 1, 'http://example.com/test.txt', '1', 'txt', '1024');`
     );
   });
 

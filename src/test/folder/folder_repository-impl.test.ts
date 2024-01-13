@@ -1,7 +1,7 @@
-import { FolderDataSource } from "../folder/data/datasources/interfaces/folder-data-source";
-import { FolderRepositoryImpl } from "../folder/data/repos/folder-repository-impl";
-import { Folder } from "../folder/domain/entities/folder";
-import { FolderRepository } from "../folder/domain/repos/folder-repository";
+import { FolderDataSource } from "../../folder/data/datasources/interfaces/folder-data-source";
+import { FolderRepositoryImpl } from "../../folder/data/repos/folder-repository-impl";
+import { Folder } from "../../folder/domain/entities/folder";
+import { FolderRepository } from "../../folder/domain/repos/folder-repository";
 
 class MockFolderDataSource implements FolderDataSource {
   getFolders(): Promise<Folder[]> {

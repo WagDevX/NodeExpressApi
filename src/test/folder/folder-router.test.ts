@@ -1,14 +1,14 @@
 import request from "supertest";
-import { Folder } from "../folder/domain/entities/folder";
-import { CreateFolderUseCase } from "../folder/domain/usecases/interfaces/create-folder";
-import { DeleteFolderUseCase } from "../folder/domain/usecases/interfaces/delete-folder";
-import { FindFolderByIdUseCase } from "../folder/domain/usecases/interfaces/find-folder-by-id";
-import { FindFolderByOwnerUseCase } from "../folder/domain/usecases/interfaces/find-folder-by-owner";
-import { GetFoldersUseCase } from "../folder/domain/usecases/interfaces/get-folders";
-import { MoveFolderUseCase } from "../folder/domain/usecases/interfaces/move-folder";
-import { RenameFolderUseCase } from "../folder/domain/usecases/interfaces/rename-folder";
-import FoldersRouter from "../folder/presentation/routers/folder-router";
-import server from "../server";
+import { Folder } from "../../folder/domain/entities/folder";
+import { CreateFolderUseCase } from "../../folder/domain/usecases/interfaces/create-folder";
+import { DeleteFolderUseCase } from "../../folder/domain/usecases/interfaces/delete-folder";
+import { FindFolderByIdUseCase } from "../../folder/domain/usecases/interfaces/find-folder-by-id";
+import { FindFolderByOwnerUseCase } from "../../folder/domain/usecases/interfaces/find-folder-by-owner";
+import { GetFoldersUseCase } from "../../folder/domain/usecases/interfaces/get-folders";
+import { MoveFolderUseCase } from "../../folder/domain/usecases/interfaces/move-folder";
+import { RenameFolderUseCase } from "../../folder/domain/usecases/interfaces/rename-folder";
+import FoldersRouter from "../../folder/presentation/routers/folder-router";
+import server from "../../server";
 
 class MockGetFoldersUseCase implements GetFoldersUseCase {
   execute(): Promise<Folder[]> {

@@ -1,5 +1,5 @@
-import { PGFolderDataSource } from "../folder/data/datasources/impl/pg-folder-data-source";
-import { SQLDatabaseWrapper } from "../folder/data/datasources/wrapper/sql-database-wrapper";
+import { PGFolderDataSource } from "../../folder/data/datasources/impl/pg-folder-data-source";
+import { SQLDatabaseWrapper } from "../../folder/data/datasources/wrapper/sql-database-wrapper";
 
 describe("PG DataSource", () => {
   let mockDataBase: SQLDatabaseWrapper;
