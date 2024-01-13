@@ -62,9 +62,9 @@ export default function FoldersRouter(
     }
   });
 
-  router.put("/:id/rename", async (req: Request, res: Response) => {
+  router.put("/rename/:id", async (req: Request, res: Response) => {
     try {
-      await renameFolderUseCase.execute(Number(req.query.id), req.body.name);
+      await renameFolderUseCase.execute(Number(req.params.id), req.body.name);
       res.statusCode = 201;
       res.json({ message: "Updated" });
     } catch (err) {

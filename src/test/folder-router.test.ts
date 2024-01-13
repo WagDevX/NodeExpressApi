@@ -94,7 +94,7 @@ describe("FolderRouter", () => {
       jest
         .spyOn(mockGetFoldersUseCase, "execute")
         .mockImplementation(() => Promise.resolve(ExpectedData));
-      const response = await request(server).get("/folder");
+      const response = await request(server).get("/folder/getall");
       expect(response.status).toBe(200);
       expect(mockGetFoldersUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual(ExpectedData);
@@ -105,7 +105,7 @@ describe("FolderRouter", () => {
       jest
         .spyOn(mockGetFoldersUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
-      const response = await request(server).get("/folder");
+      const response = await request(server).get("/folder/getall");
       expect(response.status).toBe(500);
       expect(mockGetFoldersUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual({
@@ -168,7 +168,7 @@ describe("FolderRouter", () => {
     });
   });
 
-  describe("PUT /folder/:id", () => {
+  describe("PUT /folder/rename/:id", () => {
     test("should return 201 with updated message", async () => {
       const expectedData = { message: "Updated" };
       jest
@@ -176,7 +176,7 @@ describe("FolderRouter", () => {
         .mockImplementation(() => Promise.resolve(true));
 
       const response = await request(server)
-        .put("/folder/1")
+        .put("/folder/rename/1")
         .send({ name: "Folder 1" });
 
       expect(response.status).toBe(201);
@@ -190,7 +190,7 @@ describe("FolderRouter", () => {
         .mockImplementation(() => Promise.reject(Error()));
 
       const response = await request(server)
-        .put("/folder/1")
+        .put("/folder/rename/1")
         .send({ name: "Folder 1" });
 
       expect(response.status).toBe(500);
@@ -198,7 +198,7 @@ describe("FolderRouter", () => {
     });
   });
 
-  describe("PUT /folder/:id/move", () => {
+  describe("PUT /folder/move/:id", () => {
     test("should return 201 with moved message", async () => {
       const expectedData = { message: "Moved" };
       jest
@@ -206,7 +206,7 @@ describe("FolderRouter", () => {
         .mockImplementation(() => Promise.resolve(true));
 
       const response = await request(server)
-        .put("/folder/1/move")
+        .put("/folder/move/1")
         .send({ parentFolder: 1 });
 
       expect(response.status).toBe(201);
@@ -220,7 +220,7 @@ describe("FolderRouter", () => {
         .mockImplementation(() => Promise.reject(Error()));
 
       const response = await request(server)
-        .put("/folder/1/move")
+        .put("/folder/move/1")
         .send({ parentFolder: 1 });
 
       expect(response.status).toBe(500);
@@ -254,13 +254,13 @@ describe("FolderRouter", () => {
     });
   });
 
-  describe("GET /folder/:id/owner", () => {
+  describe("GET /folder/owner/:id", () => {
     test("should return 200 with data", async () => {
       const ExpectedData = [{ id: 1, name: "Folder 1", owner: 1 }];
       jest
         .spyOn(mockFindFolderByOwnerUseCase, "execute")
         .mockImplementation(() => Promise.resolve(ExpectedData));
-      const response = await request(server).get("/folder/1/owner");
+      const response = await request(server).get("/folder/owner/1");
       expect(response.status).toBe(200);
       expect(mockFindFolderByOwnerUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual(ExpectedData);
@@ -271,7 +271,7 @@ describe("FolderRouter", () => {
       jest
         .spyOn(mockFindFolderByOwnerUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
-      const response = await request(server).get("/folder/1/owner");
+      const response = await request(server).get("/folder/owner/1");
       expect(response.status).toBe(500);
       expect(mockFindFolderByOwnerUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual({

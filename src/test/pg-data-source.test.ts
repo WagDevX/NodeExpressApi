@@ -59,7 +59,7 @@ describe("PG DataSource", () => {
     );
     const result = await ds.findFoldersByOwner(1);
     expect(mockDataBase.query).toHaveBeenCalledWith(
-      `SELECT * FROM folder WHERE owner = 1 limit 1`
+      `SELECT * FROM folder WHERE owner = 1`
     );
     expect(result).toStrictEqual([
       { id: 1, name: "folder1", owner: 1, parentFolder: undefined },
