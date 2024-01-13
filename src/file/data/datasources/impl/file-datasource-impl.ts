@@ -9,9 +9,9 @@ export class FileDataSourceImpl implements FileDataSource {
   }
 
   async createFile(file: File): Promise<void> {
+    console.log(file);
     await this.db.query(
-      `INSERT INTO files (fileName, downloadUrl, extension, owner, parentFolder, size) 
-      VALUES ('${file.fileName}', ${file.downloadUrl}, ${file.extension}, '${file.owner}', '${file.parentFolder}', '${file.size}');`
+      `INSERT INTO files (fileName, owner, downloadUrl, parentFolder, extension, size) VALUES ('${file.fileName}', ${file.owner}, '${file.downloadUrl}', '${file.parentFolder}', '${file.extension}', '${file.size}');`
     );
   }
 
