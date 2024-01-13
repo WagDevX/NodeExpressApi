@@ -8,19 +8,32 @@ export class FileDataSourceImpl implements FileDataSource {
     this.db = db;
   }
 
-  createFile(file: File): Promise<void> {
-    throw new Error("Method not implemented.");
+  async createFile(file: File): Promise<void> {
+    await this.db.query(
+      `INSERT INTO files (fileName, downloadUrl, extension, owner, parentFolder, size) 
+      VALUES ('${file.fileName}', ${file.downloadUrl}, ${file.extension}, '${file.owner}', '${file.parentFolder}', '${file.size}');`
+    );
   }
-  moveFile(id: number, parentFolder: number): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async moveFile(id: number, parentFolder: number): Promise<void> {
+    await this.db.query(
+      `UPDATE files SET parentFolder = ${parentFolder} WHERE id = ${id};`
+    );
   }
-  renameFile(id: number, name: string): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async renameFile(id: number, name: string): Promise<void> {
+    await this.db.query(
+      `UPDATE files SET fileName = ${name} WHERE id = ${id};`
+    );
   }
-  findFileByFolder(id: number): Promise<File> {
-    throw new Error("Method not implemented.");
+  async findFileByFolder(id: number): Promise<File> {
+    const result = await this.db.query(
+      `SELECT * FROM files WHERE parentFolder = ${id};`
+    );
+    return result.rows[0];
   }
-  deleteFile(id: number): Promise<void> {
-    throw new Error("Method not implemented.");
+
+  async deleteFile(id: number): Promise<void> {
+    await this.db.query(`DELETE FROM files WHERE id = ${id};`);
   }
 }
