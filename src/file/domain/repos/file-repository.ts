@@ -7,7 +7,7 @@ export interface FileRepository {
 
     renameFile(id: number, name: string) : Promise<boolean>;
 
-    findFileByFolder(id: number) : Promise<boolean>;
+    findFileByFolder(id: number) : Promise<File>;
 
     deleteFile(id: number) : Promise<boolean>;
 }

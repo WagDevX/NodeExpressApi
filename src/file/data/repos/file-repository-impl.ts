@@ -4,20 +4,25 @@ import { FileDataSource } from "../datasources/interface/file-data-source";
 
 export class FileRepositoryImpl implements FileRepository {
     constructor(private readonly fileDataSource: FileDataSource) {}
-    deleteFile(id: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async deleteFile(id: number): Promise<boolean> {
+        await this.fileDataSource.deleteFile(id);
+        return true;
     }
 
-    createFile(file: File): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async createFile(file: File): Promise<boolean> {
+        await this.fileDataSource.createFile(file);
+        return true;
     }
-    moveFile(id: number, parentFolder: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async moveFile(id: number, parentFolder: number): Promise<boolean> {
+        await this.fileDataSource.moveFile(id, parentFolder);
+        return true;
     }
-    renameFile(id: number, name: string): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async renameFile(id: number, name: string): Promise<boolean> {
+        await this.fileDataSource.renameFile(id, name);
+        return true;
     }
-    findFileByFolder(id: number): Promise<boolean> {
-        throw new Error("Method not implemented.");
+    async findFileByFolder(id: number): Promise<File> {
+        const result = await this.fileDataSource.findFileByFolder(id);
+        return result;
     }
 }

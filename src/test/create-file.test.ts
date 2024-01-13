@@ -14,7 +14,7 @@ export class MockFileRepository implements FileRepository {
     renameFile(id: number, name: string): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
-    findFileByFolder(id: number): Promise<boolean> {
+    findFileByFolder(id: number): Promise<File> {
         throw new Error("Method not implemented.");
     }
     
