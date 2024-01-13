@@ -2,6 +2,9 @@ import { File } from "../file/domain/entities/file";
 import { FileRepository } from "../file/domain/repos/file-repository";
 
 export class MockFileRepository implements FileRepository {
+    deleteFile(id: number): Promise<boolean> {
+        throw new Error("Method not implemented.");
+    }
     createFile(file: File): Promise<boolean> {
         throw new Error("Method not implemented.");
     }
