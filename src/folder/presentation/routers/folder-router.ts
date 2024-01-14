@@ -6,8 +6,7 @@ import { MoveFolderUseCase } from "../../domain/usecases/interfaces/move-folder"
 import { RenameFolderUseCase } from "../../domain/usecases/interfaces/rename-folder";
 import { FindFolderByIdUseCase } from "../../domain/usecases/interfaces/find-folder-by-id";
 import { FindFolderByOwnerUseCase } from "../../domain/usecases/interfaces/find-folder-by-owner";
-import verifyPermissionsMiddleware from "../../../core/middleware/verify-permissions";
-import e from "express";
+import { VerifyPermissionsMiddleware } from "../../../core/middleware/interface/verify-permission";
 
 export default function FoldersRouter(
   getFoldersUseCase: GetFoldersUseCase,
@@ -16,7 +15,8 @@ export default function FoldersRouter(
   renameFolderUseCase: RenameFolderUseCase,
   deleteFolderUseCase: DeleteFolderUseCase,
   findFolderByIdUseCase: FindFolderByIdUseCase,
-  FindFolderByOwnerUseCase: FindFolderByOwnerUseCase
+  FindFolderByOwnerUseCase: FindFolderByOwnerUseCase,
+  verifyPermissionsMiddleware: VerifyPermissionsMiddleware
 ) {
   const router = express.Router();
 

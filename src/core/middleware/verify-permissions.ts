@@ -1,9 +1,10 @@
 import { Request, Response, NextFunction } from "express";
 import { getPGDS } from "../..";
 import config from "../config/auth-config";
+import { VerifyPermissionsMiddleware } from "./interface/verify-permission";
 var jwt = require("jsonwebtoken");
 
-const verifyPermissionsMiddleware = async (
+const verifyPermissionsMiddleware: VerifyPermissionsMiddleware = async (
   req: Request,
   res: Response,
   next: NextFunction
@@ -44,7 +45,6 @@ const verifyPermissionsMiddleware = async (
           parseInt(decoded.user_id)
         );
 
-        console.log(folders);
         if (
           folders.filter(
             (folder) =>

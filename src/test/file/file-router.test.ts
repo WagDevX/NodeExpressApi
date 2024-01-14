@@ -5,8 +5,10 @@ import { FindFileByFolderUseCase } from "../../file/domain/usecases/interfaces/f
 import { MoveFileUseCase } from "../../file/domain/usecases/interfaces/move-file";
 import { RenameFileUseCase } from "../../file/domain/usecases/interfaces/rename-file";
 import FileRouter from "../../file/presentation/routers/file-router";
-import server from "../../server";
-import request from "supertest";
+import mockserver from "../mock-server";
+import { VerifyPermissionsMiddleware } from "../../core/middleware/interface/verify-permission";
+import supertest from "supertest";
+import mockVerifyPermissionsMiddleware from "../mock-verify-permissions";
 
 class MockCreateFileUseCase implements CreateFileUseCase {
   execute(): Promise<boolean> {
@@ -44,6 +46,7 @@ describe("FileRouter", () => {
   let mockRenameFileUseCase: RenameFileUseCase;
   let mockDeleteFileUseCase: DeleteFileUseCase;
   let mockFindFileByFolderUseCase: FindFileByFolderUseCase;
+  let mockVerifyPermissions: VerifyPermissionsMiddleware;
 
   beforeAll(() => {
     mockCreateFileUseCase = new MockCreateFileUseCase();
@@ -51,15 +54,17 @@ describe("FileRouter", () => {
     mockRenameFileUseCase = new MockRenameFileUseCase();
     mockDeleteFileUseCase = new MockDeleteFileUseCase();
     mockFindFileByFolderUseCase = new MockFindFileByFolderUseCase();
+    mockVerifyPermissions = mockVerifyPermissionsMiddleware;
 
-    server.use(
+    mockserver.use(
       "/file",
       FileRouter(
         mockCreateFileUseCase,
         mockMoveFileUseCase,
         mockRenameFileUseCase,
         mockDeleteFileUseCase,
-        mockFindFileByFolderUseCase
+        mockFindFileByFolderUseCase,
+        mockVerifyPermissions
       )
     );
   });
@@ -81,7 +86,7 @@ describe("FileRouter", () => {
         .spyOn(mockFindFileByFolderUseCase, "execute")
         .mockImplementation(() => Promise.resolve(expectedData));
 
-      const response = await request(server).get("/file/0");
+      const response = await supertest(mockserver).get("/file/0");
       expect(response.status).toBe(200);
       expect(response.body).toStrictEqual(expectedData);
     });
@@ -91,7 +96,7 @@ describe("FileRouter", () => {
         .spyOn(mockFindFileByFolderUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
 
-      const response = await request(server).get("/file/0");
+      const response = await supertest(mockserver).get("/file/0");
       expect(response.status).toBe(500);
       expect(response.body).toStrictEqual({ message: "Error fetching file" });
     });
@@ -103,7 +108,7 @@ describe("FileRouter", () => {
         .spyOn(mockCreateFileUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
 
-      const response = await request(server).post("/file");
+      const response = await supertest(mockserver).post("/file");
       expect(response.status).toBe(201);
       expect(response.body).toStrictEqual({ message: "Created" });
     });
@@ -113,7 +118,7 @@ describe("FileRouter", () => {
         .spyOn(mockCreateFileUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
 
-      const response = await request(server).post("/file");
+      const response = await supertest(mockserver).post("/file");
       expect(response.status).toBe(500);
       expect(response.body).toStrictEqual({ message: "Error creating file" });
     });
@@ -125,7 +130,7 @@ describe("FileRouter", () => {
         .spyOn(mockRenameFileUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
 
-      const response = await request(server).put("/file/rename/0");
+      const response = await supertest(mockserver).put("/file/rename/0");
       expect(response.status).toBe(201);
       expect(response.body).toStrictEqual({ message: "Renamed" });
     });
@@ -135,7 +140,7 @@ describe("FileRouter", () => {
         .spyOn(mockRenameFileUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
 
-      const response = await request(server).put("/file/rename/0");
+      const response = await supertest(mockserver).put("/file/rename/0");
       expect(response.status).toBe(500);
       expect(response.body).toStrictEqual({ message: "Error renaming file" });
     });
@@ -147,7 +152,7 @@ describe("FileRouter", () => {
         .spyOn(mockMoveFileUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
 
-      const response = await request(server).put("/file/move/0");
+      const response = await supertest(mockserver).put("/file/move/0");
       expect(response.status).toBe(201);
       expect(response.body).toStrictEqual({ message: "Moved" });
     });
@@ -157,7 +162,7 @@ describe("FileRouter", () => {
         .spyOn(mockMoveFileUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
 
-      const response = await request(server).put("/file/move/0");
+      const response = await supertest(mockserver).put("/file/move/0");
       expect(response.status).toBe(500);
       expect(response.body).toStrictEqual({ message: "Error moving file" });
     });
@@ -169,7 +174,7 @@ describe("FileRouter", () => {
         .spyOn(mockDeleteFileUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
 
-      const response = await request(server).delete("/file/0");
+      const response = await supertest(mockserver).delete("/file/0");
       expect(response.status).toBe(201);
       expect(response.body).toStrictEqual({ message: "Deleted" });
     });
@@ -179,7 +184,7 @@ describe("FileRouter", () => {
         .spyOn(mockDeleteFileUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
 
-      const response = await request(server).delete("/file/0");
+      const response = await supertest(mockserver).delete("/file/0");
       expect(response.status).toBe(500);
       expect(response.body).toStrictEqual({ message: "Error deleting file" });
     });

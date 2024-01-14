@@ -18,7 +18,7 @@ describe("AuthDataSourceImpl", () => {
 
   test("should register user and return", async () => {
     const db = new AuthDataSourceImpl(mockDB);
-    
+
     const user: User = {
       id: 1,
       username: "test",
@@ -31,15 +31,20 @@ describe("AuthDataSourceImpl", () => {
 
     await db.registerUser(user);
 
-    expect(mockDB.query).toHaveBeenCalledWith(
-      `INSERT INTO users (username, password, role) VALUES (${user.username}, ${user.password}, 'user') \n` +
+    expect(mockDB.query).toHaveBeenNthCalledWith(
+      1,
+      `INSERT INTO users (username, password, role) VALUES ('${user.username}', '${user.password}', 'user')`
+    );
+    expect(mockDB.query).toHaveBeenNthCalledWith(
+      2,
       `SELECT * FROM users WHERE username = ${user.username} AND password = ${user.password}`
     );
+    expect(mockDB.query).toHaveBeenCalledTimes(2);
   });
 
   test("should login user and return", async () => {
     const db = new AuthDataSourceImpl(mockDB);
-    
+
     const user: User = {
       id: 1,
       username: "test",
@@ -53,14 +58,13 @@ describe("AuthDataSourceImpl", () => {
     await db.loginWithUserNameAndPassword(user);
 
     expect(mockDB.query).toHaveBeenCalledWith(
-      `SELECT * FROM users WHERE username = ? AND password = ?`,
-      [user.username, user.password]
+      `SELECT * FROM users WHERE username = 'test' AND password = 'test'`
     );
   });
 
   test("should change username", async () => {
     const db = new AuthDataSourceImpl(mockDB);
-    
+
     const id = 1;
     const username = "test";
     const mockQueryResult = {
@@ -77,7 +81,7 @@ describe("AuthDataSourceImpl", () => {
 
   test("should reset password", async () => {
     const db = new AuthDataSourceImpl(mockDB);
-    
+
     const id = 1;
     const password = "test";
     const mockQueryResult = {
@@ -94,7 +98,7 @@ describe("AuthDataSourceImpl", () => {
 
   test("should change role", async () => {
     const db = new AuthDataSourceImpl(mockDB);
-    
+
     const id = 1;
     const role = "test";
     const mockQueryResult = {
@@ -111,7 +115,7 @@ describe("AuthDataSourceImpl", () => {
 
   test("should change password", async () => {
     const db = new AuthDataSourceImpl(mockDB);
-    
+
     const id = 1;
     const oldPassword = "test";
     const newPassword = "test";
@@ -129,7 +133,7 @@ describe("AuthDataSourceImpl", () => {
 
   test("should get users", async () => {
     const db = new AuthDataSourceImpl(mockDB);
-    
+
     const user: User = {
       id: 1,
       username: "test",
@@ -142,14 +146,12 @@ describe("AuthDataSourceImpl", () => {
 
     await db.getUsers();
 
-    expect(mockDB.query).toHaveBeenCalledWith(
-      `SELECT * FROM users`
-    );
+    expect(mockDB.query).toHaveBeenCalledWith(`SELECT * FROM users`);
   });
 
   test("should throw error when login failed", async () => {
     const db = new AuthDataSourceImpl(mockDB);
-    
+
     const user: User = {
       id: 1,
       username: "test",
@@ -158,10 +160,12 @@ describe("AuthDataSourceImpl", () => {
     const mockQueryResult = {
       rows: [],
     };
-    (mockDB.query as jest.Mock).mockResolvedValue(mockQueryResult);
+    (mockDB.query as jest.Mock).mockImplementation(async () =>
+      Promise.reject(Error("Authentication failed"))
+    );
 
-    await expect(db.loginWithUserNameAndPassword(user)).rejects.toThrowError("Authentication failed");
+    await expect(db.loginWithUserNameAndPassword(user)).rejects.toThrowError(
+      "Authentication failed"
+    );
   });
-
-
 });

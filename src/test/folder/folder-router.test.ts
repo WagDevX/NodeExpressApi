@@ -1,4 +1,4 @@
-import request from "supertest";
+import supertest from "supertest";
 import { Folder } from "../../folder/domain/entities/folder";
 import { CreateFolderUseCase } from "../../folder/domain/usecases/interfaces/create-folder";
 import { DeleteFolderUseCase } from "../../folder/domain/usecases/interfaces/delete-folder";
@@ -8,7 +8,11 @@ import { GetFoldersUseCase } from "../../folder/domain/usecases/interfaces/get-f
 import { MoveFolderUseCase } from "../../folder/domain/usecases/interfaces/move-folder";
 import { RenameFolderUseCase } from "../../folder/domain/usecases/interfaces/rename-folder";
 import FoldersRouter from "../../folder/presentation/routers/folder-router";
-import server from "../../server";
+import mockserver from "../mock-server";
+import mockVerifyPermissionsMiddleware from "../mock-verify-permissions";
+import { VerifyPermissionsMiddleware } from "../../core/middleware/interface/verify-permission";
+
+var request = require("supertest");
 
 class MockGetFoldersUseCase implements GetFoldersUseCase {
   execute(): Promise<Folder[]> {
@@ -60,6 +64,7 @@ describe("FolderRouter", () => {
   let mockmoveFolderUseCase: MoveFolderUseCase;
   let mockFindFolderByIdUseCase: FindFolderByIdUseCase;
   let mockFindFolderByOwnerUseCase: FindFolderByOwnerUseCase;
+  let mockVerifyPermissions: VerifyPermissionsMiddleware;
 
   beforeAll(() => {
     mockCreateFolderUseCase = new MockCreateFolderUseCase();
@@ -69,8 +74,9 @@ describe("FolderRouter", () => {
     mockmoveFolderUseCase = new MockMoveFolderUseCase();
     mockFindFolderByIdUseCase = new MockFindFolderByIdUseCase();
     mockFindFolderByOwnerUseCase = new MockFindFolderByOwnerUseCase();
+    mockVerifyPermissions = mockVerifyPermissionsMiddleware;
 
-    server.use(
+    mockserver.use(
       "/folder",
       FoldersRouter(
         mockGetFoldersUseCase,
@@ -79,7 +85,8 @@ describe("FolderRouter", () => {
         mockrenameFolderUseCase,
         mockdeleteFolderUseCase,
         mockFindFolderByIdUseCase,
-        mockFindFolderByOwnerUseCase
+        mockFindFolderByOwnerUseCase,
+        mockVerifyPermissions
       )
     );
   });
@@ -90,27 +97,34 @@ describe("FolderRouter", () => {
 
   describe("GET /folder", () => {
     test("should return 200 with data", async () => {
-      const ExpectedData = [{ id: 1, name: "Folder 1", owner: 1 }];
+      const expectedData = [{ id: 1, name: "Folder 1", owner: 1 }];
       jest
         .spyOn(mockGetFoldersUseCase, "execute")
-        .mockImplementation(() => Promise.resolve(ExpectedData));
-      const response = await request(server).get("/folder/getall");
-      expect(response.status).toBe(200);
-      expect(mockGetFoldersUseCase.execute).toBeCalledTimes(1);
-      expect(response.body).toStrictEqual(ExpectedData);
-    });
-
-    test("GET /folder returns 500 on use case error", async () => {
-      const ExpectedData = [{ id: 1, name: "Folder 1", owner: 1 }];
-      jest
-        .spyOn(mockGetFoldersUseCase, "execute")
-        .mockImplementation(() => Promise.reject(Error()));
-      const response = await request(server)
+        .mockImplementation(() => Promise.resolve(expectedData));
+      const response = await supertest(mockserver)
         .get("/folder/getall")
         .set(
           "x-access-token",
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3MDUyMDQ2NzIsImV4cCI6MTcwNTI5MTA3Mn0.TyXzh9TC6QCwjaDHN-1QiYh8-0gYIVCbgnbVcH8PAQM"
         );
+
+      console.log(response.body);
+      expect(response.status).toBe(200);
+      expect(mockGetFoldersUseCase.execute).toBeCalledTimes(1);
+      expect(response.body).toStrictEqual(expectedData);
+    });
+
+    test("GET /folder returns 500 on use case error", async () => {
+      jest
+        .spyOn(mockGetFoldersUseCase, "execute")
+        .mockImplementation(() => Promise.reject(Error()));
+      const response = await request(mockserver)
+        .get("/folder/getall")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3MDUyMDQ2NzIsImV4cCI6MTcwNTI5MTA3Mn0.TyXzh9TC6QCwjaDHN-1QiYh8-0gYIVCbgnbVcH8PAQM"
+        );
+      console.log(response);
       expect(response.status).toBe(500);
       expect(mockGetFoldersUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual({
@@ -127,7 +141,13 @@ describe("FolderRouter", () => {
         .spyOn(mockCreateFolderUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
 
-      const response = await request(server).post("/folder").send(inputData);
+      const response = await supertest(mockserver)
+        .post("/folder")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        )
+        .send(inputData);
 
       expect(response.status).toBe(201);
       expect(mockCreateFolderUseCase.execute).toBeCalledTimes(1);
@@ -140,7 +160,13 @@ describe("FolderRouter", () => {
         .spyOn(mockCreateFolderUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
 
-      const response = await request(server).post("/folder").send(inputData);
+      const response = await supertest(mockserver)
+        .post("/folder")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        )
+        .send(inputData);
 
       expect(response.status).toBe(500);
       expect(mockCreateFolderUseCase.execute).toBeCalledTimes(1);
@@ -154,7 +180,12 @@ describe("FolderRouter", () => {
         .spyOn(mockdeleteFolderUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
 
-      const response = await request(server).delete("/folder/1");
+      const response = await request(mockserver)
+        .delete("/folder/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        );
 
       expect(response.status).toBe(201);
       expect(mockdeleteFolderUseCase.execute).toBeCalledTimes(1);
@@ -166,7 +197,12 @@ describe("FolderRouter", () => {
         .spyOn(mockdeleteFolderUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
 
-      const response = await request(server).delete("/folder/1");
+      const response = await request(mockserver)
+        .delete("/folder/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        );
 
       expect(response.status).toBe(500);
       expect(mockdeleteFolderUseCase.execute).toBeCalledTimes(1);
@@ -180,8 +216,12 @@ describe("FolderRouter", () => {
         .spyOn(mockrenameFolderUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
 
-      const response = await request(server)
+      const response = await request(mockserver)
         .put("/folder/rename/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        )
         .send({ name: "Folder 1" });
 
       expect(response.status).toBe(201);
@@ -194,8 +234,12 @@ describe("FolderRouter", () => {
         .spyOn(mockrenameFolderUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
 
-      const response = await request(server)
+      const response = await request(mockserver)
         .put("/folder/rename/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        )
         .send({ name: "Folder 1" });
 
       expect(response.status).toBe(500);
@@ -210,8 +254,12 @@ describe("FolderRouter", () => {
         .spyOn(mockmoveFolderUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
 
-      const response = await request(server)
+      const response = await request(mockserver)
         .put("/folder/move/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        )
         .send({ parentFolder: 1 });
 
       expect(response.status).toBe(201);
@@ -224,8 +272,12 @@ describe("FolderRouter", () => {
         .spyOn(mockmoveFolderUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
 
-      const response = await request(server)
+      const response = await request(mockserver)
         .put("/folder/move/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        )
         .send({ parentFolder: 1 });
 
       expect(response.status).toBe(500);
@@ -239,7 +291,12 @@ describe("FolderRouter", () => {
       jest
         .spyOn(mockFindFolderByIdUseCase, "execute")
         .mockImplementation(() => Promise.resolve(ExpectedData));
-      const response = await request(server).get("/folder/1");
+      const response = await supertest(mockserver)
+        .get("/folder/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        );
       expect(response.status).toBe(200);
       expect(mockFindFolderByIdUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual(ExpectedData);
@@ -250,7 +307,12 @@ describe("FolderRouter", () => {
       jest
         .spyOn(mockFindFolderByIdUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
-      const response = await request(server).get("/folder/1");
+      const response = await supertest(mockserver)
+        .get("/folder/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        );
       expect(response.status).toBe(500);
       expect(mockFindFolderByIdUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual({
@@ -265,7 +327,12 @@ describe("FolderRouter", () => {
       jest
         .spyOn(mockFindFolderByOwnerUseCase, "execute")
         .mockImplementation(() => Promise.resolve(ExpectedData));
-      const response = await request(server).get("/folder/owner/1");
+      const response = await supertest(mockserver)
+        .get("/folder/owner/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        );
       expect(response.status).toBe(200);
       expect(mockFindFolderByOwnerUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual(ExpectedData);
@@ -276,7 +343,12 @@ describe("FolderRouter", () => {
       jest
         .spyOn(mockFindFolderByOwnerUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
-      const response = await request(server).get("/folder/owner/1");
+      const response = await supertest(mockserver)
+        .get("/folder/owner/1")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
+        );
       expect(response.status).toBe(500);
       expect(mockFindFolderByOwnerUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual({

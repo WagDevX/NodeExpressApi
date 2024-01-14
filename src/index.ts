@@ -67,7 +67,10 @@ export async function getPGDS() {
     new RenameFolder(new FolderRepositoryImpl(dataSource.folderDataSource)),
     new DeleteFolder(new FolderRepositoryImpl(dataSource.folderDataSource)),
     new FindFolderById(new FolderRepositoryImpl(dataSource.folderDataSource)),
-    new FindFolderByOwner(new FolderRepositoryImpl(dataSource.folderDataSource))
+    new FindFolderByOwner(
+      new FolderRepositoryImpl(dataSource.folderDataSource)
+    ),
+    verifyPermissionsMiddleware
   );
 
   const fileMiddleWare = FileRouter(
@@ -75,7 +78,8 @@ export async function getPGDS() {
     new MoveFile(new FileRepositoryImpl(dataSource.fileDataSource)),
     new RenameFile(new FileRepositoryImpl(dataSource.fileDataSource)),
     new DeleteFile(new FileRepositoryImpl(dataSource.fileDataSource)),
-    new FindFileByFolder(new FileRepositoryImpl(dataSource.fileDataSource))
+    new FindFileByFolder(new FileRepositoryImpl(dataSource.fileDataSource)),
+    verifyPermissionsMiddleware
   );
 
   const authMiddleWare = AuthRouter(
