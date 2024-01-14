@@ -3,7 +3,6 @@ import { FolderDataSource } from "../interfaces/folder-data-source";
 import { SQLDatabaseWrapper } from "../wrapper/sql-database-wrapper";
 
 const DB_TABLE = "folder";
-const DB_TABLE_USER = "user";
 export class PGFolderDataSource implements FolderDataSource {
   private db: SQLDatabaseWrapper;
   constructor(db: SQLDatabaseWrapper) {
@@ -38,7 +37,7 @@ export class PGFolderDataSource implements FolderDataSource {
   }
   async findFoldersByOwner(owner: number): Promise<Folder[]> {
     const dbResponse = await this.db.query(
-      `SELECT * FROM ${DB_TABLE} WHERE owner = ${owner}`
+      `SELECT * FROM ${DB_TABLE} WHERE owner = 1`
     );
     const result = dbResponse.rows.map((item) => {
       return {
@@ -73,6 +72,7 @@ export class PGFolderDataSource implements FolderDataSource {
     );
   }
   async deleteFolder(id: number): Promise<void> {
+    await this.db.query(`DELETE FROM permissions WHERE folderid = ${id}`);
     await this.db.query(`DELETE FROM ${DB_TABLE} WHERE id = ${id}`);
   }
 }

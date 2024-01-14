@@ -6,6 +6,8 @@ import { MoveFolderUseCase } from "../../domain/usecases/interfaces/move-folder"
 import { RenameFolderUseCase } from "../../domain/usecases/interfaces/rename-folder";
 import { FindFolderByIdUseCase } from "../../domain/usecases/interfaces/find-folder-by-id";
 import { FindFolderByOwnerUseCase } from "../../domain/usecases/interfaces/find-folder-by-owner";
+import verifyPermissionsMiddleware from "../../../core/middleware/verify-permissions";
+import e from "express";
 
 export default function FoldersRouter(
   getFoldersUseCase: GetFoldersUseCase,
@@ -28,28 +30,36 @@ export default function FoldersRouter(
     }
   });
 
-  router.get("/:id", async (req: Request, res: Response) => {
-    try {
-      const folders = await findFolderByIdUseCase.execute(
-        Number(req.params.id)
-      );
-      res.send(folders);
-    } catch (err) {
-      console.log(err);
-      res.status(500).send({ message: "Error fetching folder" });
+  router.get(
+    "/:id",
+    verifyPermissionsMiddleware,
+    async (req: Request, res: Response) => {
+      try {
+        const folders = await findFolderByIdUseCase.execute(
+          Number(req.params.id)
+        );
+        res.send(folders);
+      } catch (err) {
+        console.log(err);
+        res.status(500).send({ message: "Error fetching folder" });
+      }
     }
-  });
+  );
 
-  router.get("/owner/:id", async (req: Request, res: Response) => {
-    try {
-      const folders = await FindFolderByOwnerUseCase.execute(
-        Number(req.params.id)
-      );
-      res.send(folders);
-    } catch (err) {
-      res.status(500).send({ message: "Error fetching folder" });
+  router.get(
+    "/owner/:id",
+    verifyPermissionsMiddleware,
+    async (req: Request, res: Response) => {
+      try {
+        const folders = await FindFolderByOwnerUseCase.execute(
+          Number(req.params.id)
+        );
+        res.send(folders);
+      } catch (err) {
+        res.status(500).send({ message: "Error fetching folder" });
+      }
     }
-  });
+  );
 
   router.post("/", async (req: Request, res: Response) => {
     try {
@@ -62,38 +72,62 @@ export default function FoldersRouter(
     }
   });
 
-  router.put("/rename/:id", async (req: Request, res: Response) => {
-    try {
-      await renameFolderUseCase.execute(Number(req.params.id), req.body.name);
-      res.statusCode = 201;
-      res.json({ message: "Updated" });
-    } catch (err) {
-      res.status(500).send({ message: "Error renaming folder" });
+  router.put(
+    "/rename/:id",
+    verifyPermissionsMiddleware,
+    async (req: Request, res: Response) => {
+      try {
+        await renameFolderUseCase.execute(Number(req.params.id), req.body.name);
+        res.statusCode = 201;
+        res.json({ message: "Updated" });
+      } catch (err) {
+        res.status(500).send({ message: "Error renaming folder" });
+      }
     }
-  });
+  );
 
-  router.put("/move/:id", async (req: Request, res: Response) => {
-    try {
-      await moveFolderUseCase.execute(
-        Number(req.params.id),
-        req.body.parentFolder
-      );
-      res.statusCode = 201;
-      res.json({ message: "Moved" });
-    } catch (err) {
-      res.status(500).send({ message: "Error moving folder" });
+  router.put(
+    "/move/:id",
+    verifyPermissionsMiddleware,
+    async (req: Request, res: Response) => {
+      try {
+        await moveFolderUseCase.execute(
+          Number(req.params.id),
+          req.body.parentFolder
+        );
+        res.statusCode = 201;
+        res.json({ message: "Moved" });
+      } catch (err) {
+        res.status(500).send({ message: "Error moving folder" });
+      }
     }
-  });
+  );
 
-  router.delete("/:id", async (req: Request, res: Response) => {
-    try {
-      await deleteFolderUseCase.execute(Number(req.params.id));
-      res.statusCode = 201;
-      res.json({ message: "Deleted" });
-    } catch (err) {
-      res.status(500).send({ message: "Error deleting folder" });
+  router.delete(
+    "/:id",
+    verifyPermissionsMiddleware,
+    async (req: Request, res: Response) => {
+      try {
+        await deleteFolderUseCase.execute(Number(req.params.id));
+        res.statusCode = 201;
+        res.json({ message: "Deleted" });
+      } catch (err) {
+        console.log(err);
+        const error = JSON.stringify(err);
+        if (error.includes("folder_parentfolder_fkey")) {
+          res.status(505).send({
+            message: "Error deleting folder: Folder is not empty",
+          });
+        }
+        if (error.includes("files_parentfolder_fkey")) {
+          res.status(505).send({
+            message: "Error deleting folder: Folder has files inside",
+          });
+        }
+        res.status(500).send({ message: "Error deleting folder" });
+      }
     }
-  });
+  );
 
   return router;
 }

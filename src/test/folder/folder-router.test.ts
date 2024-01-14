@@ -105,7 +105,12 @@ describe("FolderRouter", () => {
       jest
         .spyOn(mockGetFoldersUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
-      const response = await request(server).get("/folder/getall");
+      const response = await request(server)
+        .get("/folder/getall")
+        .set(
+          "x-access-token",
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3MDUyMDQ2NzIsImV4cCI6MTcwNTI5MTA3Mn0.TyXzh9TC6QCwjaDHN-1QiYh8-0gYIVCbgnbVcH8PAQM"
+        );
       expect(response.status).toBe(500);
       expect(mockGetFoldersUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual({

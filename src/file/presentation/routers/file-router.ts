@@ -4,7 +4,7 @@ import { MoveFileUseCase } from "../../domain/usecases/interfaces/move-file";
 import { RenameFileUseCase } from "../../domain/usecases/interfaces/rename-file";
 import { DeleteFileUseCase } from "../../domain/usecases/interfaces/delete-file";
 import { FindFileByFolderUseCase } from "../../domain/usecases/interfaces/find-file-by-folder";
-import { FindFolderByOwnerUseCase } from "../../../folder/domain/usecases/interfaces/find-folder-by-owner";
+import verifyPermissionsMiddleware from "../../../core/middleware/verify-permissions";
 
 export default function FileRouter(
   createFileUseCase: CreateFileUseCase,
@@ -15,17 +15,21 @@ export default function FileRouter(
 ) {
   const router = express.Router();
 
-  router.get("/:id", async (req: Request, res: Response) => {
-    try {
-      const files = await findFileByFolderUseCase.execute(
-        Number(req.params.id)
-      );
-      res.send(files);
-    } catch (err) {
-      console.log(err);
-      res.status(500).send({ message: "Error fetching file" });
+  router.get(
+    "/:id",
+    verifyPermissionsMiddleware,
+    async (req: Request, res: Response) => {
+      try {
+        const files = await findFileByFolderUseCase.execute(
+          Number(req.params.id)
+        );
+        res.send(files);
+      } catch (err) {
+        console.log(err);
+        res.status(500).send({ message: "Error fetching file" });
+      }
     }
-  });
+  );
 
   router.post("/", async (req: Request, res: Response) => {
     try {

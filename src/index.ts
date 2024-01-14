@@ -8,6 +8,8 @@ import { LoginWithUserNameAndPassword } from "./auth/domain/usecases/impl/login"
 import { RegisterUser } from "./auth/domain/usecases/impl/register-user";
 import { ResetPassword } from "./auth/domain/usecases/impl/reset-password";
 import AuthRouter from "./auth/presentation/router/auth-router";
+import verifyPermissionsMiddleware from "./core/middleware/verify-permissions";
+import { verifyToken } from "./core/middleware/verify-token";
 import { FileDataSourceImpl } from "./file/data/datasources/impl/file-datasource-impl";
 import { FileRepositoryImpl } from "./file/data/repos/file-repository-impl";
 import { CreateFile } from "./file/domain/usecases/impl/create-file";
@@ -36,7 +38,7 @@ import server from "./server";
 
 var Pool = require("pg-pool");
 
-async function getPGDS() {
+export async function getPGDS() {
   const db = new Pool({
     user: "postgres",
     host: "node-express-api.ctqwqysmcezc.sa-east-1.rds.amazonaws.com",
@@ -51,7 +53,7 @@ async function getPGDS() {
     folderDataSource: new PGFolderDataSource(db),
     fileDataSource: new FileDataSourceImpl(db),
     authDataSource: new AuthDataSourceImpl(db),
-    permissionsDataSource : new PermissionDataSourceImpl(db)
+    permissionsDataSource: new PermissionDataSourceImpl(db),
   };
 }
 
@@ -89,15 +91,20 @@ async function getPGDS() {
   );
 
   const permissionsMiddleWare = PermissionsRouter(
-    new CreatePermission(new PermissionsRepositoryImpl(dataSource.permissionsDataSource)),
-    new UpdatePermission(new PermissionsRepositoryImpl(dataSource.permissionsDataSource)),
-    new GetPermissions(new PermissionsRepositoryImpl(dataSource.permissionsDataSource))
+    new CreatePermission(
+      new PermissionsRepositoryImpl(dataSource.permissionsDataSource)
+    ),
+    new UpdatePermission(
+      new PermissionsRepositoryImpl(dataSource.permissionsDataSource)
+    ),
+    new GetPermissions(
+      new PermissionsRepositoryImpl(dataSource.permissionsDataSource)
+    )
   );
 
-
-  server.use("/folder", folderMiddleWare);
+  server.use("/folder", verifyToken, folderMiddleWare);
   server.use("/auth", authMiddleWare);
-  server.use("/files", fileMiddleWare);
-  server.use("/permissions", permissionsMiddleWare);
-  server.listen(4000, () => console.log("Running on http://localhost:4000"));
+  server.use("/files", verifyToken, fileMiddleWare);
+  server.use("/permissions", verifyToken, permissionsMiddleWare);
+  server.listen(8080, () => console.log("Running on http://localhost:8080"));
 })();
