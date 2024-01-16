@@ -58,7 +58,9 @@ export class PGFolderDataSource implements FolderDataSource {
     //   )`);
     console.log(folder);
     await this.db.query(
-      `INSERT INTO ${DB_TABLE} (name, owner, parentFolder) VALUES ('${folder.name}', ${folder.owner}, ${folder.parentFolder})`
+      `INSERT INTO ${DB_TABLE} (name, owner, parentFolder) VALUES ('${
+        folder.name
+      }', ${folder.owner}, ${folder.parentFolder ?? null})`
     );
   }
   async renameFolder(id: number, name: string): Promise<void> {
