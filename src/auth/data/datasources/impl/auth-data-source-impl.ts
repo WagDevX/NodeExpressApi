@@ -14,11 +14,13 @@ export class AuthDataSourceImpl implements AuthDataSource {
     const result = await this.db.query(
       `SELECT * FROM users WHERE username = '${user.username}' AND password = '${user.password}'`
     );
+    console.log(user);
     const token = jwt.sign({ user_id: result.rows[0].id }, config.secret, {
       algorithm: "HS256",
       allowInsecureKeySizes: true,
       expiresIn: 86400, // 24 hours
     });
+
     if (result.rows.length === 0) {
       throw new Error("Authentication failed");
     }
@@ -61,6 +63,10 @@ export class AuthDataSourceImpl implements AuthDataSource {
 
   async getUsers(): Promise<User[]> {
     const result = await this.db.query(`SELECT * FROM users`);
-    return result.rows;
+
+    return result.rows.map((usuario) => ({
+      ...usuario,
+      password: null,
+    }));
   }
 }

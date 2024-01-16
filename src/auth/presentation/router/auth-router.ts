@@ -29,7 +29,14 @@ export default function AuthRouter(
   });
 
   router.post("/login", async (req: any, res: any) => {
-    console.log(res.body);
+    if (req.body.password === "") {
+      res.status(404).send({ message: "Password is required" });
+      return;
+    }
+    if (req.body.username === "") {
+      res.status(404).send({ message: "Username is required" });
+      return;
+    }
     try {
       const user = await loginUseCase.execute(req.body);
       res.send(user);
