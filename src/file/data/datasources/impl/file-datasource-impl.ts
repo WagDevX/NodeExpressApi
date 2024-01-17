@@ -28,13 +28,23 @@ export class FileDataSourceImpl implements FileDataSource {
       `UPDATE files SET fileName = ${name} WHERE id = ${id};`
     );
   }
+
   async findFileByFolder(id: number, owner: number): Promise<File[]> {
     console.log(id);
-    const result = await this.db.query(
-      `SELECT * FROM files WHERE owner = $1 AND (parentfolder = $2 OR parentfolder IS NULL)`,
-      [owner, isNaN(id) ? null : id]
-    );
-    return result.rows;
+
+    if (isNaN(id)) {
+      const rootResults = await this.db.query(
+        `SELECT * FROM files WHERE owner = $1 AND parentfolder IS NULL`,
+        [owner]
+      );
+      return rootResults.rows;
+    } else {
+      const parentResults = await this.db.query(
+        `SELECT * FROM files WHERE owner = $1 AND parentfolder = $2`,
+        [owner, id]
+      );
+      return parentResults.rows;
+    }
   }
 
   async deleteFile(id: number): Promise<void> {
