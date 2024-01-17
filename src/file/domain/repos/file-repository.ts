@@ -1,7 +1,7 @@
 import { File } from "../entities/file";
 
 export interface FileRepository {
-  createFile(file: File): Promise<boolean>;
+  createFile(file: File): Promise<File>;
 
   moveFile(id: number, parentFolder: number): Promise<boolean>;
 

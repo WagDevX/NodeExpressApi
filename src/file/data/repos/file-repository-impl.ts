@@ -9,9 +9,8 @@ export class FileRepositoryImpl implements FileRepository {
     return true;
   }
 
-  async createFile(file: File): Promise<boolean> {
-    await this.fileDataSource.createFile(file);
-    return true;
+  async createFile(file: File): Promise<File> {
+    return await this.fileDataSource.createFile(file);
   }
   async moveFile(id: number, parentFolder: number): Promise<boolean> {
     await this.fileDataSource.moveFile(id, parentFolder);

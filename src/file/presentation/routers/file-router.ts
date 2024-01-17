@@ -35,9 +35,9 @@ export default function FileRouter(
 
   router.post("/", async (req: Request, res: Response) => {
     try {
-      await createFileUseCase.execute(req.body);
+      const result = await createFileUseCase.execute(req.body);
       res.statusCode = 201;
-      res.json({ message: "Created" });
+      res.json({ message: "Created", result });
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: "Error creating file" });
