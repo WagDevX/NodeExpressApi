@@ -57,11 +57,12 @@ export class PGFolderDataSource implements FolderDataSource {
     //   id SERIAL PRIMARY KEY,
     //   name VARCHAR(255) NOT NULL,
     //   parentFolder INTEGER REFERENCES Folder(id),
-    //   owner INTEGER
+    //   owner INTEGER REFERENCES Folder(id),
+    //   owner VARCHAR(255) REFERENCES User(username)
     //   )`);
     console.log(folder);
     await this.db.query(
-      `INSERT INTO ${DB_TABLE} (name, owner,ownerName, parentFolder) VALUES ('${
+      `INSERT INTO ${DB_TABLE} (name, owner, ownerName, parentFolder) VALUES ('${
         folder.name
       }', ${folder.owner},${folder.ownerName}, ${folder.parentFolder ?? null})`
     );
