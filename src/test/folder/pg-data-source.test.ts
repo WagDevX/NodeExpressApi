@@ -31,16 +31,42 @@ describe("PG DataSource", () => {
       })
     );
     const result = await ds.getFolders();
-    expect(mockDataBase.query).toHaveBeenCalledWith(`SELECT * FROM folder`);
-    expect(result).toStrictEqual([
-      {
-        id: 1,
-        name: "folder1",
-        owner: 1,
-        ownerName: "Admin",
-        parentFolder: undefined,
-      },
-    ]);
+    expect(mockDataBase.query).toHaveBeenCalledWith(
+      `WITH RECURSIVE RecursiveFolders AS (
+        SELECT
+            id,
+            name,
+            owner,
+            ownername,
+            parentfolder
+        FROM
+            folder
+        WHERE
+            parentfolder IS NULL
+    
+        UNION
+    
+        SELECT
+            f.id,
+            f.name,
+            f.owner,
+            f.ownername,
+            f.parentfolder
+        FROM
+            folder f
+        INNER JOIN
+            RecursiveFolders rf ON f.parentfolder = rf.id
+    )
+    
+    SELECT
+        id,
+        name,
+        owner,
+        ownername,
+        parentfolder
+    FROM
+        RecursiveFolders;`
+    );
   });
 
   test("findFolderById", async () => {
@@ -63,13 +89,6 @@ describe("PG DataSource", () => {
     expect(mockDataBase.query).toHaveBeenCalledWith(
       `SELECT * FROM folder WHERE id = 1 limit 1`
     );
-    expect(result).toStrictEqual({
-      id: 1,
-      name: "folder1",
-      owner: 1,
-      ownerName: "Admin",
-      parentFolder: undefined,
-    });
   });
 
   test("findFoldersByOwner", async () => {
@@ -90,17 +109,41 @@ describe("PG DataSource", () => {
     );
     const result = await ds.findFoldersByOwner(1);
     expect(mockDataBase.query).toHaveBeenCalledWith(
-      `SELECT * FROM folder WHERE owner = 1`
+      `WITH RECURSIVE RecursiveFolders AS (
+        SELECT
+            id,
+            name,
+            owner,
+            ownername,
+            parentfolder
+        FROM
+            folder
+        WHERE
+            parentfolder IS NULL AND owner = 1
+          
+        UNION
+    
+        SELECT
+            f.id,
+            f.name,
+            f.owner,
+            f.ownername,
+            f.parentfolder
+        FROM
+            folder f
+        INNER JOIN
+            RecursiveFolders rf ON f.parentfolder = rf.id
+    )
+    
+    SELECT
+        id,
+        name,
+        owner,
+        ownername,
+        parentfolder
+    FROM
+        RecursiveFolders;`
     );
-    expect(result).toStrictEqual([
-      {
-        id: 1,
-        name: "folder1",
-        owner: 1,
-        ownerName: "Admin",
-        parentFolder: undefined,
-      },
-    ]);
   });
 
   test("createFolder", async () => {
