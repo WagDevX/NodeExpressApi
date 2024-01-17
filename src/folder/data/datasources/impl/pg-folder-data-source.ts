@@ -9,9 +9,6 @@ export class PGFolderDataSource implements FolderDataSource {
   constructor(db: SQLDatabaseWrapper) {
     this.db = db;
   }
-  getAllRootFoldersByOwner(owner: number): Promise<FoldersResponse[]> {
-    throw new Error("Method not implemented.");
-  }
 
   async getFolders(): Promise<FoldersResponse[]> {
     const dbResponse = await this.db.query(

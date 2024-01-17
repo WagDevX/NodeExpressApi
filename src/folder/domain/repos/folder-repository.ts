@@ -15,6 +15,4 @@ export interface FolderRepository {
   renameFolder(id: number, name: string): Promise<boolean>;
 
   deleteFolder(id: number): Promise<boolean>;
-
-  getAllRootFoldersByOwner(owner: number): Promise<FoldersResponse[]>;
 }

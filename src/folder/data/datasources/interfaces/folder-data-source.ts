@@ -9,5 +9,4 @@ export interface FolderDataSource {
   renameFolder(id: number, name: string): Promise<void>;
   moveFolder(id: number, parentFolder: number): Promise<void>;
   deleteFolder(id: number): Promise<void>;
-  getAllRootFoldersByOwner(owner: number): Promise<FoldersResponse[]>;
 }

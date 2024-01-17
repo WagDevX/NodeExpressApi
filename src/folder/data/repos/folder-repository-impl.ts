@@ -8,9 +8,6 @@ export class FolderRepositoryImpl implements FolderRepository {
   constructor(dataSource: FolderDataSource) {
     this.dataSource = dataSource;
   }
-  getAllRootFoldersByOwner(owner: number): Promise<FoldersResponse[]> {
-    throw new Error("Method not implemented.");
-  }
   async findFolderById(id: number): Promise<Folder> {
     const response = await this.dataSource.findFolderById(id);
     return response;
