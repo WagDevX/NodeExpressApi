@@ -19,7 +19,7 @@ describe("PG DataSource", () => {
 
     jest.spyOn(mockDataBase, "query").mockImplementation(() =>
       Promise.resolve({
-        rows: [{ id: 1, name: "folder1", owner: 1, parentFolder: undefined }],
+        rows: [{ id: 1, name: "folder1", owner: 1, ownerName: "Admin", parentFolder: undefined }],
       })
     );
     const result = await ds.getFolders();
@@ -34,7 +34,7 @@ describe("PG DataSource", () => {
 
     jest.spyOn(mockDataBase, "query").mockImplementation(() =>
       Promise.resolve({
-        rows: [{ id: 1, name: "folder1", owner: 1, parentFolder: undefined }],
+        rows: [{ id: 1, name: "folder1", owner: 1, ownerName: "Admin", parentFolder: undefined }],
       })
     );
     const result = await ds.findFolderById(1);
@@ -54,7 +54,7 @@ describe("PG DataSource", () => {
 
     jest.spyOn(mockDataBase, "query").mockImplementation(() =>
       Promise.resolve({
-        rows: [{ id: 1, name: "folder1", owner: 1, parentFolder: undefined }],
+        rows: [{ id: 1, name: "folder1", owner: 1, ownerName: "Admin", parentFolder: undefined }],
       })
     );
     const result = await ds.findFoldersByOwner(1);
@@ -62,7 +62,7 @@ describe("PG DataSource", () => {
       `SELECT * FROM folder WHERE owner = 1`
     );
     expect(result).toStrictEqual([
-      { id: 1, name: "folder1", owner: 1, parentFolder: undefined },
+      { id: 1, name: "folder1", owner: 1, ownerName: "Admin", parentFolder: undefined },
     ]);
   });
 
@@ -73,6 +73,7 @@ describe("PG DataSource", () => {
       id: 1,
       name: "folder1",
       owner: 1,
+      ownerName: "Admin",
       parentFolder: undefined,
     });
     expect(mockDataBase.query).toHaveBeenCalledWith(

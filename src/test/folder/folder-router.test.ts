@@ -97,7 +97,7 @@ describe("FolderRouter", () => {
 
   describe("GET /folder", () => {
     test("should return 200 with data", async () => {
-      const expectedData = [{ id: 1, name: "Folder 1", owner: 1 }];
+      const expectedData = [{ id: 1, name: "Folder 1", owner: 1, ownerName: "Admin" }];
       jest
         .spyOn(mockGetFoldersUseCase, "execute")
         .mockImplementation(() => Promise.resolve(expectedData));
@@ -136,7 +136,7 @@ describe("FolderRouter", () => {
   describe("POST /folder", () => {
     test("should return 204 with created", async () => {
       const expectedData = { message: "Created" };
-      const inputData = { name: "Folder 1", owner: 1 };
+      const inputData = { name: "Folder 1", owner: 1, ownerName: "Admin" };
       jest
         .spyOn(mockCreateFolderUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
@@ -155,7 +155,7 @@ describe("FolderRouter", () => {
     });
 
     test("should returns 500 on case error", async () => {
-      const inputData = { name: "Folder 1", owner: 1 };
+      const inputData = { name: "Folder 1", owner: 1, ownerName: "Admin" };
       jest
         .spyOn(mockCreateFolderUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
@@ -287,7 +287,7 @@ describe("FolderRouter", () => {
 
   describe("GET /folder/:id", () => {
     test("should return 200 with data", async () => {
-      const ExpectedData = { id: 1, name: "Folder 1", owner: 1 };
+      const ExpectedData = { id: 1, name: "Folder 1", owner: 1, ownerName: "Admin" };
       jest
         .spyOn(mockFindFolderByIdUseCase, "execute")
         .mockImplementation(() => Promise.resolve(ExpectedData));
@@ -303,7 +303,7 @@ describe("FolderRouter", () => {
     });
 
     test("GET /folder/:id returns 500 on use case error", async () => {
-      const ExpectedData = { id: 1, name: "Folder 1", owner: 1 };
+      const ExpectedData = { id: 1, name: "Folder 1", owner: 1, ownerName: "Admin" };
       jest
         .spyOn(mockFindFolderByIdUseCase, "execute")
         .mockImplementation(() => Promise.reject(Error()));
@@ -323,7 +323,7 @@ describe("FolderRouter", () => {
 
   describe("GET /folder/owner/:id", () => {
     test("should return 200 with data", async () => {
-      const ExpectedData = [{ id: 1, name: "Folder 1", owner: 1 }];
+      const ExpectedData = [{ id: 1, name: "Folder 1", owner: 1, ownerName: "Admin" }];
       jest
         .spyOn(mockFindFolderByOwnerUseCase, "execute")
         .mockImplementation(() => Promise.resolve(ExpectedData));

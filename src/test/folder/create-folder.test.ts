@@ -37,6 +37,7 @@ describe("CreateFolderUseCase", () => {
     const folder: Folder = {
       id: 1,
       name: "Folder 1",
+      ownerName: "admin",
       owner: 1,
       parentFolder: undefined,
     };

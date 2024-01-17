@@ -19,6 +19,7 @@ describe("FindFolderByIdUseCase", () => {
           id: folderId,
           name: "Folder 1",
           owner: 1,
+          ownerName: "Admin",
           parentFolder: undefined,
         };
         return folder;

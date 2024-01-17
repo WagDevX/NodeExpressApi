@@ -40,7 +40,7 @@ describe("FolderRepositoryImpl", () => {
   describe("getFolders", () => {
     test("should call getFolders from dataSource", async () => {
       const expectedData = [
-        { id: 1, name: "folder1", owner: 1, parentFolder: undefined },
+        { id: 1, name: "folder1", owner: 1, ownerName: "Admin", parentFolder: undefined },
       ];
       jest
         .spyOn(mockFolderDataSource, "getFolders")
@@ -55,6 +55,7 @@ describe("FolderRepositoryImpl", () => {
       const expectedData = {
         id: 1,
         name: "folder1",
+        ownerName: "Admin",
         owner: 1,
         parentFolder: undefined,
       };
@@ -69,7 +70,7 @@ describe("FolderRepositoryImpl", () => {
   describe("findFoldersByOwner", () => {
     test("should call findFoldersByOwner from dataSource", async () => {
       const expectedData = [
-        { id: 1, name: "folder1", owner: 1, parentFolder: undefined },
+        { id: 1, name: "folder1", owner: 1, ownerName: "Admin", parentFolder: undefined },
       ];
       jest
         .spyOn(mockFolderDataSource, "findFoldersByOwner")
@@ -88,6 +89,7 @@ describe("FolderRepositoryImpl", () => {
         id: 1,
         name: "folder1",
         owner: 1,
+        ownerName: "Admin",
         parentFolder: undefined,
       });
       expect(result).resolves;

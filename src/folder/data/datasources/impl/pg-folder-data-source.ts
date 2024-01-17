@@ -16,6 +16,7 @@ export class PGFolderDataSource implements FolderDataSource {
         id: item.id,
         name: item.name,
         owner: item.owner,
+        ownerName: item.ownername,
         parentFolder: item.parentfolder ? item.parentfolder : undefined,
       };
     });
@@ -30,6 +31,7 @@ export class PGFolderDataSource implements FolderDataSource {
         id: item.id,
         name: item.name,
         owner: item.owner,
+        ownerName: item.ownername,
         parentFolder: item.parentfolder ? item.parentfolder : undefined,
       };
     });
@@ -44,6 +46,7 @@ export class PGFolderDataSource implements FolderDataSource {
         id: item.id,
         name: item.name,
         owner: item.owner,
+        ownerName: item.ownername,
         parentFolder: item.parentfolder ? item.parentfolder : undefined,
       };
     });
@@ -58,9 +61,9 @@ export class PGFolderDataSource implements FolderDataSource {
     //   )`);
     console.log(folder);
     await this.db.query(
-      `INSERT INTO ${DB_TABLE} (name, owner, parentFolder) VALUES ('${
+      `INSERT INTO ${DB_TABLE} (name, owner,ownerName, parentFolder) VALUES ('${
         folder.name
-      }', ${folder.owner}, ${folder.parentFolder ?? null})`
+      }', ${folder.owner},${folder.ownerName}, ${folder.parentFolder ?? null})`
     );
   }
   async renameFolder(id: number, name: string): Promise<void> {

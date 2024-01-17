@@ -11,7 +11,7 @@ describe("GetFoldersUseCase", () => {
 
   test("should return list of folders", async () => {
     const expetedData = [
-      { name: "Folder 1", owner: 1, parentFolder: undefined },
+      { name: "Folder 1", owner: 1, ownerName: "Admin", parentFolder: undefined },
     ];
 
     jest
