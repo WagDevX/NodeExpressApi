@@ -5,7 +5,7 @@ import { CreateFolderUseCase } from "../interfaces/create-folder";
 export class CreateFolder implements CreateFolderUseCase {
   constructor(private readonly folderRepository: FolderRepository) {}
 
-  async execute(folder: Folder): Promise<boolean> {
+  async execute(folder: Folder): Promise<Folder> {
     return await this.folderRepository.createFolder(folder);
   }
 }

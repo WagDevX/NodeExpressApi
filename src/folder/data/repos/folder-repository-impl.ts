@@ -23,9 +23,8 @@ export class FolderRepositoryImpl implements FolderRepository {
     return response;
   }
 
-  async createFolder(folder: Folder): Promise<boolean> {
-    await this.dataSource.createFolder(folder);
-    return true;
+  async createFolder(folder: Folder): Promise<Folder> {
+    return await this.dataSource.createFolder(folder);
   }
 
   async renameFolder(id: number, name: string): Promise<boolean> {

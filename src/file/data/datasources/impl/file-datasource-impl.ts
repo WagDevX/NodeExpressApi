@@ -10,8 +10,10 @@ export class FileDataSourceImpl implements FileDataSource {
 
   async createFile(file: File): Promise<void> {
     console.log(file);
+    const parentFolderValue =
+      file.parentFolder != null ? `'${file.parentFolder}'` : "NULL";
     await this.db.query(
-      `INSERT INTO files (fileName, owner, downloadUrl, parentFolder, extension, size) VALUES ('${file.fileName}', ${file.owner}, '${file.downloadUrl}', '${file.parentFolder}', '${file.extension}', '${file.size}');`
+      `INSERT INTO files (fileName, owner, ownername, downloadUrl, parentfolder, extension, size) VALUES ('${file.fileName}', ${file.owner}, '${file.ownerName}', '${file.downloadUrl}', ${parentFolderValue}, '${file.extension}', ${file.size});`
     );
   }
 
@@ -26,11 +28,13 @@ export class FileDataSourceImpl implements FileDataSource {
       `UPDATE files SET fileName = ${name} WHERE id = ${id};`
     );
   }
-  async findFileByFolder(id: number): Promise<File> {
+  async findFileByFolder(id: number, owner: number): Promise<File[]> {
+    console.log(id);
     const result = await this.db.query(
-      `SELECT * FROM files WHERE parentFolder = ${id};`
+      `SELECT * FROM files WHERE owner = $1 AND (parentfolder = $2 OR parentfolder IS NULL)`,
+      [owner, isNaN(id) ? null : id]
     );
-    return result.rows[0];
+    return result.rows;
   }
 
   async deleteFile(id: number): Promise<void> {

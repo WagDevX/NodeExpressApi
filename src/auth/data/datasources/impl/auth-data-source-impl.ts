@@ -14,20 +14,20 @@ export class AuthDataSourceImpl implements AuthDataSource {
     const result = await this.db.query(
       `SELECT * FROM users WHERE username = '${user.username}' AND password = '${user.password}'`
     );
-    console.log(user);
-    const token = jwt.sign({ user_id: result.rows[0].id }, config.secret, {
-      algorithm: "HS256",
-      allowInsecureKeySizes: true,
-      expiresIn: 86400, // 24 hours
-    });
 
     if (result.rows.length === 0) {
       throw new Error("Authentication failed");
-    }
+    } else {
+      const token = jwt.sign({ user_id: result.rows[0].id }, config.secret, {
+        algorithm: "HS256",
+        allowInsecureKeySizes: true,
+        expiresIn: 86400, // 24 hours
+      });
 
-    const response = result.rows[0];
-    response.accessToken = token;
-    return response;
+      const response = result.rows[0];
+      response.accessToken = token;
+      return response;
+    }
   }
   async registerUser(user: User): Promise<User> {
     await this.db.query(

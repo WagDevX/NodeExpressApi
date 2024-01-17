@@ -64,9 +64,9 @@ export default function FoldersRouter(
 
   router.post("/", async (req: Request, res: Response) => {
     try {
-      await createFolderUseCase.execute(req.body);
+      const folder = await createFolderUseCase.execute(req.body);
       res.statusCode = 201;
-      res.json({ message: "Created" });
+      res.json({ message: "Created", data: folder });
     } catch (err) {
       console.log(err);
       res.status(500).send({ message: "Error creating folder" });
@@ -113,17 +113,18 @@ export default function FoldersRouter(
         res.statusCode = 201;
         res.json({ message: "Deleted" });
       } catch (err) {
-        console.log(err);
         const error = JSON.stringify(err);
         if (error.includes("folder_parentfolder_fkey")) {
           res.status(505).send({
-            message: "Error deleting folder: Folder is not empty",
+            message: "Erro ao deletar pasta: pasta não vazia",
           });
+          return;
         }
         if (error.includes("files_parentfolder_fkey")) {
           res.status(505).send({
-            message: "Error deleting folder: Folder has files inside",
+            message: "Erro ao deletar pasta: pasta tem arquivos",
           });
+          return;
         }
         res.status(500).send({ message: "Error deleting folder" });
       }

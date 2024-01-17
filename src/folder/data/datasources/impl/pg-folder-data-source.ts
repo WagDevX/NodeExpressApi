@@ -194,7 +194,7 @@ export class PGFolderDataSource implements FolderDataSource {
 
     return organizeFolders(result);
   }
-  async createFolder(folder: Folder): Promise<void> {
+  async createFolder(folder: Folder): Promise<Folder> {
     // await this.db.query(`CREATE TABLE IF NOT EXISTS ${DB_TABLE} (
     //   id SERIAL PRIMARY KEY,
     //   name VARCHAR(255) NOT NULL,
@@ -202,12 +202,27 @@ export class PGFolderDataSource implements FolderDataSource {
     //   owner INTEGER REFERENCES Folder(id),
     //   owner VARCHAR(255) REFERENCES User(username)
     //   )`);
-    console.log(folder);
     await this.db.query(
-      `INSERT INTO ${DB_TABLE} (name, owner, ownerName, parentFolder) VALUES ('${
+      `INSERT INTO ${DB_TABLE} (name, owner, ownername, parentFolder) VALUES ('${
         folder.name
-      }', ${folder.owner},${folder.ownerName}, ${folder.parentFolder ?? null})`
+      }', ${folder.owner}, '${folder.ownerName}', ${
+        folder.parentFolder ?? null
+      })`
     );
+    const dbResponse = await this.db.query(
+      `SELECT * FROM ${DB_TABLE} WHERE name = $1 AND owner = $2 AND (parentfolder = $3 OR parentfolder IS NULL)`,
+      [folder.name, folder.owner, folder.parentFolder]
+    );
+    const result = dbResponse.rows.map((item) => {
+      return {
+        id: item.id,
+        name: item.name,
+        owner: item.owner,
+        ownerName: item.ownername,
+        parentFolder: item.parentfolder ? item.parentfolder : undefined,
+      };
+    });
+    return result[0];
   }
   async renameFolder(id: number, name: string): Promise<void> {
     await this.db.query(

@@ -4,7 +4,7 @@ import { FindFileByFolderUseCase } from "../interfaces/find-file-by-folder";
 
 export class FindFileByFolder implements FindFileByFolderUseCase {
   constructor(private readonly repository: FileRepository) {}
-  async execute(id: number): Promise<File> {
-    return await this.repository.findFileByFolder(id);
+  async execute(id: number, owner: number): Promise<File[]> {
+    return await this.repository.findFileByFolder(id, owner);
   }
 }

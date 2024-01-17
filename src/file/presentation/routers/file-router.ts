@@ -22,7 +22,8 @@ export default function FileRouter(
     async (req: Request, res: Response) => {
       try {
         const files = await findFileByFolderUseCase.execute(
-          Number(req.params.id)
+          Number(req.params.id),
+          Number(req.query.owner)
         );
         res.send(files);
       } catch (err) {
