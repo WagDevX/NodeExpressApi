@@ -56,6 +56,7 @@ export default function FoldersRouter(
         );
         res.send(folders);
       } catch (err) {
+        console.log(err);
         res.status(500).send({ message: "Error fetching folder" });
       }
     }

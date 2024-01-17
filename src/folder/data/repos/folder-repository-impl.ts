@@ -1,4 +1,5 @@
 import { Folder } from "../../domain/entities/folder";
+import { FoldersResponse } from "../../domain/entities/folders-response";
 import { FolderRepository } from "../../domain/repos/folder-repository";
 import { FolderDataSource } from "../datasources/interfaces/folder-data-source";
 
@@ -6,6 +7,9 @@ export class FolderRepositoryImpl implements FolderRepository {
   dataSource: FolderDataSource;
   constructor(dataSource: FolderDataSource) {
     this.dataSource = dataSource;
+  }
+  getAllRootFoldersByOwner(owner: number): Promise<FoldersResponse[]> {
+    throw new Error("Method not implemented.");
   }
   async findFolderById(id: number): Promise<Folder> {
     const response = await this.dataSource.findFolderById(id);
@@ -17,7 +21,7 @@ export class FolderRepositoryImpl implements FolderRepository {
     return response;
   }
 
-  async getFolders(): Promise<Folder[]> {
+  async getFolders(): Promise<FoldersResponse[]> {
     const response = await this.dataSource.getFolders();
     return response;
   }
