@@ -5,7 +5,7 @@ export class MockFileRepository implements FileRepository {
   deleteFile(id: number): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  createFile(file: File): Promise<boolean> {
+  createFile(file: File): Promise<File> {
     throw new Error("Method not implemented.");
   }
   moveFile(id: number, parentFolder: number): Promise<boolean> {
@@ -14,7 +14,7 @@ export class MockFileRepository implements FileRepository {
   renameFile(id: number, name: string): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  findFileByFolder(id: number): Promise<File> {
+  findFileByFolder(id: number): Promise<File[]> {
     throw new Error("Method not implemented.");
   }
 }
@@ -32,6 +32,7 @@ describe("CreateFileUseCase", () => {
       id: 1,
       fileName: "File 1",
       owner: 1,
+      ownerName: "test",
       downloadUrl: "http://localhost:3000/file/1",
       parentFolder: undefined,
       extension: "txt",
@@ -40,7 +41,7 @@ describe("CreateFileUseCase", () => {
 
     jest
       .spyOn(mockFolderRepository, "createFile")
-      .mockImplementation(async () => true);
+      .mockImplementation(async () => file);
 
     const result = await mockFolderRepository.createFile(file);
 

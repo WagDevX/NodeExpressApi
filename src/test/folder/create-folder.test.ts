@@ -20,7 +20,7 @@ export class MockFolderRepository implements FolderRepository {
   deleteFolder(id: number): Promise<boolean> {
     throw new Error("Method not implemented.");
   }
-  async createFolder(folder: Folder): Promise<boolean> {
+  async createFolder(folder: Folder): Promise<Folder> {
     throw new Error("Method not implemented.");
   }
 }
@@ -44,7 +44,7 @@ describe("CreateFolderUseCase", () => {
 
     jest
       .spyOn(mockFolderRepository, "createFolder")
-      .mockImplementation(async () => true);
+      .mockImplementation(async () => folder);
 
     const result = await mockFolderRepository.createFolder(folder);
 

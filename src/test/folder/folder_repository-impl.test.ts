@@ -13,7 +13,7 @@ class MockFolderDataSource implements FolderDataSource {
   findFoldersByOwner(owner: number): Promise<Folder[]> {
     throw new Error("Method not implemented.");
   }
-  createFolder(folder: Folder): Promise<void> {
+  createFolder(folder: Folder): Promise<Folder> {
     throw new Error("Method not implemented.");
   }
   renameFolder(id: number, name: string): Promise<void> {
@@ -26,6 +26,13 @@ class MockFolderDataSource implements FolderDataSource {
     throw new Error("Method not implemented.");
   }
 }
+const expectedData: Folder = {
+  id: 1,
+  name: "folder1",
+  owner: 1,
+  ownerName: "Admin",
+  parentFolder: undefined,
+};
 
 describe("FolderRepositoryImpl", () => {
   let mockFolderDataSource: FolderDataSource;
@@ -40,7 +47,13 @@ describe("FolderRepositoryImpl", () => {
   describe("getFolders", () => {
     test("should call getFolders from dataSource", async () => {
       const expectedData = [
-        { id: 1, name: "folder1", owner: 1, ownerName: "Admin", parentFolder: undefined },
+        {
+          id: 1,
+          name: "folder1",
+          owner: 1,
+          ownerName: "Admin",
+          parentFolder: undefined,
+        },
       ];
       jest
         .spyOn(mockFolderDataSource, "getFolders")
@@ -69,14 +82,11 @@ describe("FolderRepositoryImpl", () => {
 
   describe("findFoldersByOwner", () => {
     test("should call findFoldersByOwner from dataSource", async () => {
-      const expectedData = [
-        { id: 1, name: "folder1", owner: 1, ownerName: "Admin", parentFolder: undefined },
-      ];
       jest
         .spyOn(mockFolderDataSource, "findFoldersByOwner")
-        .mockImplementation(() => Promise.resolve(expectedData));
+        .mockImplementation(() => Promise.resolve([expectedData]));
       const result = await folderRepository.findFoldersByOwner(1);
-      expect(result).toBe(expectedData);
+      expect(result).toStrictEqual([expectedData]);
     });
   });
 
@@ -84,7 +94,7 @@ describe("FolderRepositoryImpl", () => {
     test("should call createFolder from dataSource", async () => {
       jest
         .spyOn(mockFolderDataSource, "createFolder")
-        .mockImplementation(() => Promise.resolve());
+        .mockImplementation(() => Promise.resolve(expectedData));
       const result = await folderRepository.createFolder({
         id: 1,
         name: "folder1",

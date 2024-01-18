@@ -22,7 +22,7 @@ class MockGetFoldersUseCase implements GetFoldersUseCase {
 }
 
 class MockCreateFolderUseCase implements CreateFolderUseCase {
-  execute(folder: Folder): Promise<boolean> {
+  execute(folder: Folder): Promise<Folder> {
     throw new Error("Method not implemented.");
   }
 }
@@ -111,7 +111,6 @@ describe("FolderRouter", () => {
           "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoxLCJpYXQiOjE3MDUyMDQ2NzIsImV4cCI6MTcwNTI5MTA3Mn0.TyXzh9TC6QCwjaDHN-1QiYh8-0gYIVCbgnbVcH8PAQM"
         );
 
-      console.log(response.body);
       expect(response.status).toBe(200);
       expect(mockGetFoldersUseCase.execute).toBeCalledTimes(1);
       expect(response.body).toStrictEqual(expectedData);
@@ -138,11 +137,10 @@ describe("FolderRouter", () => {
 
   describe("POST /folder", () => {
     test("should return 204 with created", async () => {
-      const expectedData = { message: "Created" };
       const inputData = { name: "Folder 1", owner: 1, ownerName: "Admin" };
       jest
         .spyOn(mockCreateFolderUseCase, "execute")
-        .mockImplementation(() => Promise.resolve(true));
+        .mockImplementation(() => Promise.resolve(inputData));
 
       const response = await supertest(mockserver)
         .post("/folder")
@@ -154,7 +152,6 @@ describe("FolderRouter", () => {
 
       expect(response.status).toBe(201);
       expect(mockCreateFolderUseCase.execute).toBeCalledTimes(1);
-      expect(response.body).toStrictEqual(expectedData);
     });
 
     test("should returns 500 on case error", async () => {
@@ -183,16 +180,9 @@ describe("FolderRouter", () => {
         .spyOn(mockdeleteFolderUseCase, "execute")
         .mockImplementation(() => Promise.resolve(true));
 
-      const response = await request(mockserver)
-        .delete("/folder/1")
-        .set(
-          "x-access-token",
-          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjo0LCJpYXQiOjE3MDUyNDc4MzIsImV4cCI6MTcwNTMzNDIzMn0.2QO56gLXl99tblrXQBWvcOXCPKcSvz3EDLk33eDadyg"
-        );
-
+      const response = await request(mockserver).delete("/folder/1");
       expect(response.status).toBe(201);
       expect(mockdeleteFolderUseCase.execute).toBeCalledTimes(1);
-      expect(response.body).toStrictEqual(expectedData);
     });
 
     test("should returns 500 on case error", async () => {

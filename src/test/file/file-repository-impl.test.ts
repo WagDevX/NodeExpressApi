@@ -7,7 +7,7 @@ class MockFileDataSource implements FileDataSource {
   deleteFile(id: number): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  createFile(file: File): Promise<void> {
+  createFile(file: File): Promise<File> {
     throw new Error("Method not implemented.");
   }
   moveFile(id: number, parentFolder: number): Promise<void> {
@@ -16,7 +16,7 @@ class MockFileDataSource implements FileDataSource {
   renameFile(id: number, name: string): Promise<void> {
     throw new Error("Method not implemented.");
   }
-  findFileByFolder(id: number): Promise<File> {
+  findFileByFolder(id: number): Promise<File[]> {
     throw new Error("Method not implemented.");
   }
 }
@@ -35,6 +35,7 @@ describe("FileRepositoryImpl", () => {
     id: 1,
     fileName: "file1",
     owner: 1,
+    ownerName: "teste",
     downloadUrl: "http://www.google.com",
     parentFolder: undefined,
     extension: ".txt",
@@ -45,7 +46,7 @@ describe("FileRepositoryImpl", () => {
     test("should call createFile from dataSource", async () => {
       jest
         .spyOn(mockDataSource, "createFile")
-        .mockImplementation(() => Promise.resolve());
+        .mockImplementation(() => Promise.resolve(fakeFile));
       const result = await fileRepository.createFile(fakeFile);
       expect(result).resolves;
     });
@@ -75,9 +76,12 @@ describe("FileRepositoryImpl", () => {
     test("should call findFileByFolder from dataSource", async () => {
       jest
         .spyOn(mockDataSource, "findFileByFolder")
-        .mockImplementation(() => Promise.resolve(fakeFile));
-      const result = await fileRepository.findFileByFolder(fakeFile.id!);
-      expect(result).toStrictEqual(fakeFile);
+        .mockImplementation(() => Promise.resolve([fakeFile]));
+      const result = await fileRepository.findFileByFolder(
+        fakeFile.id!,
+        fakeFile.owner
+      );
+      expect(result).toStrictEqual([fakeFile]);
     });
   });
 

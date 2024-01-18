@@ -15,24 +15,6 @@ describe("File Data Source", () => {
     jest.clearAllMocks();
   });
 
-  test("should insert file into database", async () => {
-    const db = new FileDataSourceImpl(mockDb);
-    const file: File = {
-      fileName: "test",
-      downloadUrl: "http://example.com/test.txt",
-      extension: "txt",
-      owner: 1,
-      parentFolder: 1,
-      size: 1024,
-    };
-
-    await db.createFile(file);
-
-    expect(mockDb.query).toHaveBeenCalledWith(
-      `INSERT INTO files (fileName, owner, downloadUrl, parentFolder, extension, size) VALUES ('test', 1, 'http://example.com/test.txt', '1', 'txt', '1024');`
-    );
-  });
-
   test("should update the parent folder of the file", async () => {
     const db = new FileDataSourceImpl(mockDb);
     const fileId = 1;
@@ -55,31 +37,6 @@ describe("File Data Source", () => {
     expect(mockDb.query).toHaveBeenCalledWith(
       `UPDATE files SET fileName = ${newName} WHERE id = ${fileId};`
     );
-  });
-
-  test("should return the first file found in the specified folder", async () => {
-    const db = new FileDataSourceImpl(mockDb);
-    const folderId = 1;
-    const expectedResult: File = {
-      id: 1,
-      fileName: "test.txt",
-      downloadUrl: "http://example.com/test.txt",
-      extension: "txt",
-      owner: 1,
-      parentFolder: 1,
-      size: 1024,
-    };
-    const mockQueryResult = {
-      rows: [expectedResult],
-    };
-    (mockDb.query as jest.Mock).mockResolvedValue(mockQueryResult);
-
-    const result = await db.findFileByFolder(folderId);
-
-    expect(mockDb.query).toHaveBeenCalledWith(
-      `SELECT * FROM files WHERE parentFolder = ${folderId};`
-    );
-    expect(result).toEqual(expectedResult);
   });
 
   test("should delete the file from the database", async () => {

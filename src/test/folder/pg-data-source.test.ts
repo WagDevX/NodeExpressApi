@@ -156,10 +156,12 @@ describe("PG DataSource", () => {
       ownerName: "Admin",
       parentFolder: undefined,
     });
-    expect(mockDataBase.query).toHaveBeenCalledWith(
-      `INSERT INTO folder (name, owner, ownerName, parentFolder) VALUES ('folder1', 1,Admin, null)`
+    expect(mockDataBase.query).toHaveBeenNthCalledWith(
+      1,
+      `INSERT INTO folder (name, owner, ownername, parentFolder) VALUES ('folder1', 1, 'Admin', null)`
     );
-    expect(result).toBeUndefined();
+
+    expect(mockDataBase.query).toHaveBeenCalledTimes(2);
   });
 
   test("renameFolder", async () => {

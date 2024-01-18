@@ -11,7 +11,7 @@ import supertest from "supertest";
 import mockVerifyPermissionsMiddleware from "../mock-verify-permissions";
 
 class MockCreateFileUseCase implements CreateFileUseCase {
-  execute(): Promise<boolean> {
+  execute(): Promise<File> {
     throw new Error("Method not implemented.");
   }
 }
@@ -35,7 +35,7 @@ class MockRenameFileUseCase implements RenameFileUseCase {
 }
 
 class MockFindFileByFolderUseCase implements FindFileByFolderUseCase {
-  execute(id: number): Promise<File> {
+  execute(id: number): Promise<File[]> {
     throw new Error("Method not implemented.");
   }
 }
@@ -72,23 +72,24 @@ describe("FileRouter", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
+  const expectedData: File = {
+    fileName: "test",
+    downloadUrl: "test",
+    ownerName: "test",
+    owner: 0,
+    extension: ".test",
+    size: 0,
+  };
 
   describe("GET /:id", () => {
     test("should return 200 with data", async () => {
-      const expectedData: File = {
-        fileName: "test",
-        downloadUrl: "test",
-        owner: 0,
-        extension: ".test",
-        size: 0,
-      };
       jest
         .spyOn(mockFindFileByFolderUseCase, "execute")
-        .mockImplementation(() => Promise.resolve(expectedData));
+        .mockImplementation(() => Promise.resolve([expectedData]));
 
       const response = await supertest(mockserver).get("/file/0");
       expect(response.status).toBe(200);
-      expect(response.body).toStrictEqual(expectedData);
+      expect(response.body).toStrictEqual([expectedData]);
     });
 
     test("should return 500 with error message", async () => {
@@ -106,11 +107,14 @@ describe("FileRouter", () => {
     test("should return 201 with message", async () => {
       jest
         .spyOn(mockCreateFileUseCase, "execute")
-        .mockImplementation(() => Promise.resolve(true));
+        .mockImplementation(() => Promise.resolve(expectedData));
 
       const response = await supertest(mockserver).post("/file");
       expect(response.status).toBe(201);
-      expect(response.body).toStrictEqual({ message: "Created" });
+      expect(response.body).toStrictEqual({
+        message: "Created",
+        result: expectedData,
+      });
     });
 
     test("should return 500 with error message", async () => {

@@ -9,6 +9,7 @@ describe("findFileByFolder", () => {
     id: 1,
     fileName: "File 1",
     owner: 1,
+    ownerName: "test",
     downloadUrl: "http://localhost:3000/file/1",
     parentFolder: undefined,
     extension: "txt",
@@ -25,9 +26,12 @@ describe("findFileByFolder", () => {
 
     jest
       .spyOn(mockFolderRepository, "findFileByFolder")
-      .mockImplementation(async () => Promise.resolve(fakeFile));
+      .mockImplementation(() => Promise.resolve([fakeFile]));
 
-    const result = await mockFolderRepository.findFileByFolder(id);
+    const result = await mockFolderRepository.findFileByFolder(
+      id,
+      fakeFile.parentFolder!
+    );
 
     expect(result).toBeTruthy();
   });
