@@ -1,8 +1,6 @@
 # Desafio Node-Express-API
 
 Desafio técnico - Full stack
-
-Desafio: Elaborar uma solução com as seguintes tecnologias:
 Backend REST:
 Node
 Typescript
@@ -10,35 +8,94 @@ Express
 Docker
 Banco de dados Postgres
 MicroServiço AWS / Lambda (opcional)
-Frontend:
-Typescript
-React
-ViteJS (opcional)
 
+
+## Variáveis de Ambiente
+
+Para rodar esse projeto localmente, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
+
+`RDS_HOSTNAME`
+
+`RDS_USERNAME`
+
+`RDS_PORT`
+
+`JWT_SECRET`
+
+
+
+## Bando de dados, scripts
+
+Foi utilizado Postgres hospedado no AWS RDS
+
+Caso deseje rodar localmente antes de inciar crie as tabelas necessárias:
+
+
+```
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    passowrd VARCHAR(255) NOT NULL,
+    role VARCHAR(255),
+);
+```
+
+```
+CREATE TABLE folder (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    owner INTEGER REFERENCES users(id),
+    ownername VARCHAR(255) REFERENCES users(username),
+    parentfolder INTEGER REFERENCES folder(id),
+);
+```
+```
+CREATE TABLE files (
+    id SERIAL PRIMARY KEY,
+    filename VARCHAR(255) NOT NULL,
+    owner INTEGER REFERENCES users(id),
+    downloadurl VARCHAR(255),
+    ownername VARCHAR(255) REFERENCES users(username),
+    parentfolder INTEGER REFERENCES folder(id),
+    extension VARCHAR(60),
+    size INTEGER,
+);
+```
+```
+CREATE TABLE permissions (
+    id SERIAL PRIMARY KEY,
+    folderid INTEGER REFERENCES folder(id),
+    userid INTEGER REFERENCES users(id),
+    canread BOOLEAN NOT NULL,
+    canwrite BOOLEAN NOT NULL,
+    candelete BOOLEAN NOT NULL,
+);
+```
 ## Deploy
 
 O projeto está rodando em um container docker numa instância EC2 da AWS
 
-```bash
+```bash 
   http://18.230.150.26:8080/
 ```
+
 
 ## Aprendizados
 
 Foi a minha primeira API desenvolvida com Express, havia feito antes somente com o framework NextJS integrado junto com o Front-End, foi uma experiência bastante enriquecedora e gratificante em ver tudo funcionando no final. Aprendi bastante sobre Docker no qual tinha quase zero contato, subi a api em uma instância EC2 na AWS(Isso foi muito legal)
 
 Não consegui cumprir todos os requisitos no front-end, pois acabei ficando bastante no back, porém, não deixou de ser uma experiência extremamente enriquecedora.
-
 ## Arquitetura
+
+Aqui é onde foi o meu maior foco.
 
 Seguindo os princípios SOLID, desenvolvi a api utilizando Clean Architecture. Do qual se divide em três principais layers, Domain, Data e Presentation.
 
 Domain é onde se encontra as regras de negócio da api, ditando os contratos dos repositórios, entidades e casos de uso.
 
-Seguido pelo Data Layer onde se encontra a implementação dos repositórios definidos no Domain Layer, assim como a implementação de classes para efetivamente se conectar com fontes externas para obter os dados necessários seguindo a lógica definida acima.
+Seguido pelo Data Layer que onde se encontra a implementação dos repositórios definidos no Domain Layer, assim como a implementação de classes para efetivamente se conectar com fontes externas para obter os dados necessários seguindo a lógica definida acima.
 
-Por último de não menos importante, o Presentation Layer onde se encontra o router.
-
+Por último de não menos importante, o Presentation Layer onde se encontra as rotas.
 ## Rodando localmente
 
 Clone o projeto
@@ -59,11 +116,13 @@ Inicie o servidor no modo desenvolvimento
   docker compose -f docker-compose.dev.yml
 ```
 
+
 ou Inicie o servidor no modo produção
 
 ```bash
   docker compose up
 ```
+
 
 ## Rodando os testes
 
@@ -75,6 +134,7 @@ Para rodar os testes, rode o seguinte comando
   npm run test
 ```
 
+
 ## Documentação da API
 
 #### Cria uma conta
@@ -83,16 +143,17 @@ Para rodar os testes, rode o seguinte comando
   POST /auth/register
 ```
 
+
 #### Fazer autênticação
 
 ```http
   POST /auth/login
 ```
 
-| Parâmetro  | Tipo     | Descrição                        |
-| :--------- | :------- | :------------------------------- |
-| `username` | `string` | **Obrigatório**. Nome de usuário |
-| `password` | `string` | **Obrigatório**. Senha           |
+| Parâmetro   | Tipo       | Descrição                                   |
+| :---------- | :--------- | :------------------------------------------ |
+| `username`  | `string`   | **Obrigatório**. Nome de usuário             |
+| `password`  | `string`   | **Obrigatório**. Senha                      |
 
 #### Retorna todos os usuários
 
@@ -100,9 +161,9 @@ Para rodar os testes, rode o seguinte comando
   GET /auth/getall
 ```
 
-| Parâmetro       | Tipo     | Descrição                                     |
-| :-------------- | :------- | :-------------------------------------------- |
-| `x-acess-token` | `header` | **Obrigatório**. Token do usuário autenticado |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-acess-token`   | `header`   | **Obrigatório**. Token do usuário autenticado|
 
 #### Obter todas as pastas
 
@@ -110,9 +171,9 @@ Para rodar os testes, rode o seguinte comando
 GET /folders/getall
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
 
 #### Obter detalhes de uma pasta por ID
 
@@ -120,10 +181,10 @@ GET /folders/getall
   GET /folders/:id
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `id`             | `path`   | **Obrigatório**. ID da pasta                  |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `id`              | `path`     | **Obrigatório**. ID da pasta                |
 
 #### Obter pastas por proprietário
 
@@ -131,10 +192,10 @@ GET /folders/getall
   GET /folders/owner/:id
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `id`             | `path`   | **Obrigatório**. ID do proprietário           |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `id`              | `path`     | **Obrigatório**. ID do proprietário         |
 
 #### Criar uma nova pasta
 
@@ -142,10 +203,10 @@ GET /folders/getall
   POST /folders/
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `body`           | `json`   | **Obrigatório**. Dados da nova pasta          |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `body`            | `json`     | **Obrigatório**. Dados da nova pasta        |
 
 #### Renomear uma pasta
 
@@ -153,11 +214,11 @@ GET /folders/getall
   PUT /folders/rename/:id
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `id`             | `path`   | **Obrigatório**. ID da pasta                  |
-| `body`           | `json`   | **Obrigatório**. Novo nome da pasta           |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `id`              | `path`     | **Obrigatório**. ID da pasta                |
+| `body`            | `json`     | **Obrigatório**. Novo nome da pasta         |
 
 #### Mover uma pasta
 
@@ -165,11 +226,11 @@ GET /folders/getall
   PUT /folders/move/:id
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `id`             | `path`   | **Obrigatório**. ID da pasta                  |
-| `body`           | `json`   | **Obrigatório**. ID da nova pasta pai         |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `id`              | `path`     | **Obrigatório**. ID da pasta                |
+| `body`            | `json`     | **Obrigatório**. ID da nova pasta pai       |
 
 #### Deletar uma pasta
 
@@ -177,10 +238,11 @@ GET /folders/getall
   DELETE /folders/:id
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `id`             | `path`   | **Obrigatório**. ID da pasta                  |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `id`              | `path`     | **Obrigatório**. ID da pasta                |
+
 
 #### Obter arquivos por ID de Pasta
 
@@ -188,11 +250,11 @@ GET /folders/getall
   GET /files/:id?owner=<owner_id>
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `id`             | `path`   | **Obrigatório**. ID da pasta                  |
-| `owner`          | `query`  | **Obrigatório**. ID do proprietário           |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `id`              | `path`     | **Obrigatório**. ID da pasta                |
+| `owner`           | `query`    | **Obrigatório**. ID do proprietário         |
 
 #### Criar um novo arquivo
 
@@ -200,10 +262,10 @@ GET /folders/getall
   POST /files/
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `body`           | `json`   | **Obrigatório**. Dados do novo arquivo        |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `body`            | `json`     | **Obrigatório**. Dados do novo arquivo      |
 
 #### Renomear um arquivo
 
@@ -211,11 +273,11 @@ GET /folders/getall
   PUT /files/rename/:id
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `id`             | `path`   | **Obrigatório**. ID do arquivo                |
-| `body`           | `json`   | **Obrigatório**. Novo nome do arquivo         |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `id`              | `path`     | **Obrigatório**. ID do arquivo              |
+| `body`            | `json`     | **Obrigatório**. Novo nome do arquivo       |
 
 #### Mover um arquivo
 
@@ -223,11 +285,11 @@ GET /folders/getall
   PUT /files/move/:id
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `id`             | `path`   | **Obrigatório**. ID do arquivo                |
-| `body`           | `json`   | **Obrigatório**. ID da nova pasta             |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `id`              | `path`     | **Obrigatório**. ID do arquivo              |
+| `body`            | `json`     | **Obrigatório**. ID da nova pasta           |
 
 #### Deletar um arquivo
 
@@ -235,10 +297,10 @@ GET /folders/getall
   DELETE /files/:id
 ```
 
-| Parâmetro        | Tipo     | Descrição                                     |
-| :--------------- | :------- | :-------------------------------------------- |
-| `x-access-token` | `header` | **Obrigatório**. Token do usuário autenticado |
-| `id`             | `path`   | **Obrigatório**. ID do arquivo                |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `x-access-token`  | `header`   | **Obrigatório**. Token do usuário autenticado|
+| `id`              | `path`     | **Obrigatório**. ID do arquivo              |
 
 #### Criar uma nova permissão
 
@@ -246,9 +308,9 @@ GET /folders/getall
   POST /permissions/
 ```
 
-| Parâmetro | Tipo   | Descrição                                |
-| :-------- | :----- | :--------------------------------------- |
-| `body`    | `json` | **Obrigatório**. Dados da nova permissão |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `body`            | `json`     | **Obrigatório**. Dados da nova permissão    |
 
 #### Atualizar uma permissão
 
@@ -256,10 +318,10 @@ GET /folders/getall
   PUT /permissions/:id
 ```
 
-| Parâmetro | Tipo   | Descrição                                       |
-| :-------- | :----- | :---------------------------------------------- |
-| `id`      | `path` | **Obrigatório**. ID da permissão                |
-| `body`    | `json` | **Obrigatório**. Dados atualizados da permissão |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `id`              | `path`     | **Obrigatório**. ID da permissão             |
+| `body`            | `json`     | **Obrigatório**. Dados atualizados da permissão |
 
 #### Obter todas as permissões
 
@@ -267,6 +329,13 @@ GET /folders/getall
   GET /permissions/
 ```
 
-| Parâmetro | Tipo   | Descrição                                |
-| :-------- | :----- | :--------------------------------------- |
-| `body`    | `json` | **Obrigatório**. Dados da nova permissão |
+| Parâmetro         | Tipo       | Descrição                                   |
+| :---------------- | :--------- | :------------------------------------------ |
+| `body`            | `json`     | **Obrigatório**. Dados da nova permissão    |
+
+
+## Licença
+
+[MIT](https://choosealicense.com/licenses/mit/)
+
+
