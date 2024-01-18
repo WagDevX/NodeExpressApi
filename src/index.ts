@@ -1,3 +1,4 @@
+import { configDotenv } from "dotenv";
 import { AuthDataSourceImpl } from "./auth/data/datasources/impl/auth-data-source-impl";
 import { AuthRepositoryImpl } from "./auth/data/repos/auth-repository-impl";
 import { ChangePassword } from "./auth/domain/usecases/impl/change-password";
@@ -38,13 +39,15 @@ import server from "./server";
 
 var Pool = require("pg-pool");
 
+configDotenv();
+
 export async function getPGDS() {
   const db = new Pool({
-    user: "postgres",
-    host: "node-express-api.ctqwqysmcezc.sa-east-1.rds.amazonaws.com",
+    user: process.env.RDS_USERNAME,
+    host: process.env.RDS_HOSTNAME,
     database: "postgres",
-    password: "fUhnnucQUzoXTFiWmPiQ",
-    port: 5432,
+    password: process.env.RDS_HOSTNAME,
+    port: process.env.RDS_PORT,
     ssl: {
       rejectUnauthorized: false,
     },

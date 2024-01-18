@@ -7,7 +7,7 @@ services:
       target: development
     volumes:
       - ./:/usr/src/app
-      - /usr/src/app/node_modules
+      - /src/app/node_modules
     ports:
-      - 4000:4000
+      - 8080:8080
     command: npm run dev
