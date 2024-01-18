@@ -31,15 +31,13 @@ Não consegui cumprir todos os requisitos no front-end, pois acabei ficando bast
 
 ## Arquitetura
 
-Aqui é onde foi o meu maior foco.
-
 Seguindo os princípios SOLID, desenvolvi a api utilizando Clean Architecture. Do qual se divide em três principais layers, Domain, Data e Presentation.
 
 Domain é onde se encontra as regras de negócio da api, ditando os contratos dos repositórios, entidades e casos de uso.
 
-Seguido pelo Data Layer que onde se encontra a implementação dos repositórios definidos no Domain Layer, assim como a implementação de classes para efetivamente se conectar com fontes externas para obter os dados necessários seguindo a lógica definida acima.
+Seguido pelo Data Layer onde se encontra a implementação dos repositórios definidos no Domain Layer, assim como a implementação de classes para efetivamente se conectar com fontes externas para obter os dados necessários seguindo a lógica definida acima.
 
-Por último de não menos importante, o Presentation Layer onde se encontra as rotas.
+Por último de não menos importante, o Presentation Layer onde se encontra o router.
 
 ## Rodando localmente
 
@@ -82,7 +80,7 @@ Para rodar os testes, rode o seguinte comando
 #### Cria uma conta
 
 ```http
-  GET /auth/register
+  POST /auth/register
 ```
 
 #### Fazer autênticação
