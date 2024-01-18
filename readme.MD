@@ -10,6 +10,31 @@ Banco de dados Postgres
 MicroServiço AWS / Lambda (opcional)
 
 
+## Aprendizados
+
+Foi a minha primeira API desenvolvida com Express, havia feito antes somente com o framework NextJS integrado junto com o Front-End, foi uma experiência bastante enriquecedora e gratificante em ver tudo funcionando no final. Aprendi bastante sobre Docker no qual tinha quase zero contato, subi a api em uma instância EC2 na AWS(Isso foi muito legal)
+
+Não consegui cumprir todos os requisitos no front-end, pois acabei ficando bastante no back, porém, não deixou de ser uma experiência extremamente enriquecedora.
+## Arquitetura
+
+Aqui é onde foi o meu maior foco.
+
+Seguindo os princípios SOLID, desenvolvi a api utilizando Clean Architecture. Do qual se divide em três principais layers, Domain, Data e Presentation.
+
+Domain é onde se encontra as regras de negócio da api, ditando os contratos dos repositórios, entidades e casos de uso.
+
+Seguido pelo Data Layer que onde se encontra a implementação dos repositórios definidos no Domain Layer, assim como a implementação de classes para efetivamente se conectar com fontes externas para obter os dados necessários seguindo a lógica definida acima.
+
+Por último de não menos importante, o Presentation Layer onde se encontra as rotas.
+## Deploy
+
+O projeto está rodando em um container docker numa instância EC2 da AWS
+
+```bash 
+  http://18.230.150.26:8080/
+```
+
+
 ## Variáveis de Ambiente
 
 Para rodar esse projeto localmente, você vai precisar adicionar as seguintes variáveis de ambiente no seu .env
@@ -71,31 +96,6 @@ CREATE TABLE permissions (
     candelete BOOLEAN NOT NULL,
 );
 ```
-## Deploy
-
-O projeto está rodando em um container docker numa instância EC2 da AWS
-
-```bash 
-  http://18.230.150.26:8080/
-```
-
-
-## Aprendizados
-
-Foi a minha primeira API desenvolvida com Express, havia feito antes somente com o framework NextJS integrado junto com o Front-End, foi uma experiência bastante enriquecedora e gratificante em ver tudo funcionando no final. Aprendi bastante sobre Docker no qual tinha quase zero contato, subi a api em uma instância EC2 na AWS(Isso foi muito legal)
-
-Não consegui cumprir todos os requisitos no front-end, pois acabei ficando bastante no back, porém, não deixou de ser uma experiência extremamente enriquecedora.
-## Arquitetura
-
-Aqui é onde foi o meu maior foco.
-
-Seguindo os princípios SOLID, desenvolvi a api utilizando Clean Architecture. Do qual se divide em três principais layers, Domain, Data e Presentation.
-
-Domain é onde se encontra as regras de negócio da api, ditando os contratos dos repositórios, entidades e casos de uso.
-
-Seguido pelo Data Layer que onde se encontra a implementação dos repositórios definidos no Domain Layer, assim como a implementação de classes para efetivamente se conectar com fontes externas para obter os dados necessários seguindo a lógica definida acima.
-
-Por último de não menos importante, o Presentation Layer onde se encontra as rotas.
 ## Rodando localmente
 
 Clone o projeto
@@ -337,5 +337,4 @@ GET /folders/getall
 ## Licença
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
 
