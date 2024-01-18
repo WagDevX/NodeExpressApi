@@ -32,7 +32,7 @@ O projeto está rodando em um container docker numa instância EC2 da AWS
 
 ```bash 
   http://18.230.150.26:8080/
-  Usuários cadastrados para teste ["admin" senha "admin"] , ["user" senha "user"]
+  Usuários cadastrados para teste ["username": "admin", "senha": "admin"] , ["username": "user", "senha": "user"]
 ```
 
 
