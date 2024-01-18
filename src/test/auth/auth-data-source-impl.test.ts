@@ -37,7 +37,7 @@ describe("AuthDataSourceImpl", () => {
     );
     expect(mockDB.query).toHaveBeenNthCalledWith(
       2,
-      `SELECT * FROM users WHERE username = ${user.username} AND password = ${user.password}`
+      `SELECT * FROM users WHERE username = '${user.username}' AND password = '${user.password}'`
     );
     expect(mockDB.query).toHaveBeenCalledTimes(2);
   });

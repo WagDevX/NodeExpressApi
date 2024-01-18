@@ -34,7 +34,7 @@ export class AuthDataSourceImpl implements AuthDataSource {
       `INSERT INTO users (username, password, role) VALUES ('${user.username}', '${user.password}', 'user')`
     );
     const result = await this.db.query(
-      `SELECT * FROM users WHERE username = ${user.username} AND password = ${user.password}`
+      `SELECT * FROM users WHERE username = '${user.username}' AND password = '${user.password}'`
     );
     return result.rows[0];
   }
