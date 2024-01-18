@@ -49,11 +49,11 @@ Para rodar esse projeto localmente, você vai precisar adicionar as seguintes va
 
 
 
-## Banco de dados
+## Bando de dados, scripts
 
 Foi utilizado Postgres hospedado no AWS RDS
 
-Para rodar localmente, antes de inciar crie as tabelas necessárias:
+Caso deseje rodar localmente antes de inciar crie as tabelas necessárias:
 
 
 ```
@@ -95,6 +95,36 @@ CREATE TABLE permissions (
     canwrite BOOLEAN NOT NULL,
     candelete BOOLEAN NOT NULL,
 );
+```
+
+##SEED
+
+```
+INSERT INTO users (name, password, role) VALUES
+('Admin', 'password1', 'admin'),
+('User2', 'password2', 'user'),
+('User3', 'password3', 'user');
+
+INSERT INTO folder (name, owner, ownername, parentfolder) VALUES
+('Folder1', 1, 'Admin', NULL),
+('Folder2', 2, 'User2', NULL),
+('Subfolder1', 1, 'Admin', 1),
+('Subfolder2', 2, 'User2', 1),
+('Subfolder3', 3, 'User3', 2);
+
+INSERT INTO files (filename, owner, downloadurl, ownername, parentfolder, extension, size) VALUES
+('File1.txt', 1, 'https://example.com/file1.txt', 'Admin', 1, 'txt', 1024),
+('File2.jpg', 2, 'https://example.com/file2.jpg', 'User2', 1, 'jpg', 2048),
+('File3.pdf', 1, 'https://example.com/file3.pdf', 'Admin', 2, 'pdf', 4096),
+('File4.png', 3, 'https://example.com/file4.png', 'User3', 3, 'png', 8192);
+
+INSERT INTO permissions (folderid, userid, canread, canwrite, candelete) VALUES
+(1, 1, true, true, true),
+(1, 2, true, false, false),
+(2, 2, true, true, false),
+(3, 1, true, true, false),
+(4, 3, true, false, false),
+
 ```
 ## Rodando localmente
 
@@ -337,4 +367,3 @@ GET /folders/getall
 ## Licença
 
 [MIT](https://choosealicense.com/licenses/mit/)
-
