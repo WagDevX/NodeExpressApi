@@ -46,7 +46,7 @@ export async function getPGDS() {
     user: process.env.RDS_USERNAME,
     host: process.env.RDS_HOSTNAME,
     database: "postgres",
-    password: process.env.RDS_HOSTNAME,
+    password: process.env.RDS_PASSWORD,
     port: process.env.RDS_PORT,
     ssl: {
       rejectUnauthorized: false,
