@@ -49,7 +49,7 @@ Para rodar esse projeto localmente, você vai precisar adicionar as seguintes va
 
 
 
-## Bando de dados, scripts
+## Banco de dados, scripts
 
 Foi utilizado Postgres hospedado no AWS RDS
 
